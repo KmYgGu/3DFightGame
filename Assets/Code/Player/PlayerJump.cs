@@ -2,24 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerJump : MonoBehaviour
 {
     [SerializeField]private bool isGround = true;
     private bool isFalling = false;
 
-    PlayerControler playctn;
+    private float acceleration = 13;
 
 
     private void Update()
     {
-        //Jump();
-        //Falling();
+
+        //GroundCheck();
     }
 
     private void Start()
     {
         StartCoroutine("FallJump");
+        
     }
+
+
+
 
     IEnumerator FallJump()
     {
@@ -29,10 +34,12 @@ public class PlayerJump : MonoBehaviour
             if (isGround)
             {
 
-                if (Input.GetKeyUp(KeyCode.Space))
+                if (Input.GetKeyUp(KeyCode.Space)&& isGround)
                 {
-                    StartCoroutine(Jump());
                     isGround = false;
+                    yield return StartCoroutine(Jump());
+                    //yield return new WaitForSeconds(1f);
+                    //yield break;
                 }
 
             }
@@ -40,7 +47,8 @@ public class PlayerJump : MonoBehaviour
             {
                 if (!isFalling)
                 {
-                    //yield return StartCoroutine("Falling");
+                    yield return StartCoroutine("Falling");
+                    
                 }
                 
 
@@ -62,37 +70,60 @@ public class PlayerJump : MonoBehaviour
 
         while (elapsed < duration)
         {
-            //transform.position = Vector3.Lerp(startPos, jumpPos, elapsed / duration);
+            
 
             transform.position = new Vector3(transform.position.x,
-                Mathf.Lerp(startPos.y, jumpPos.y, elapsed / duration),
+                Mathf.Lerp(startPos.y, jumpPos.y, 1-(1- elapsed / duration)*(1- elapsed / duration)),//elapsed / duration
                 transform.position.z);
 
 
             elapsed += Time.deltaTime;
             yield return null; // 다음 프레임까지 대기
         }
+        //Vector3 jumpPos = transform.position + new Vector3(0, 1, 0);
 
-        //transform.position = jumpPos; // 정확한 위치 보정
+
+
+
         transform.position = new Vector3(transform.position.x, jumpPos.y, transform.position.z);
 
         isGround = false; // 점프 완료
 
-
+        yield return null; // 다음 프레임까지 대기
     }
 
     IEnumerator Falling()
     {
         isFalling = true;
-        Debug.Log("1초후 떨어짐");
-        yield return new WaitForSeconds(0.8f);
+        //Debug.Log("1초후 떨어짐");
+        //yield return new WaitForSeconds(0.8f);
 
+        float timer = 0;
+        float currentFallSpeed = 0f;
         while (!isGround) // 바닥에 닿을 때까지 반복
         {
-            transform.position += new Vector3(0, Physics.gravity.y/900, 0);
+            //transform.position += new Vector3(0, Physics.gravity.y*Time.deltaTime, 0);
+
+            timer += Time.deltaTime;
+            currentFallSpeed = Mathf.Min(1 + acceleration * timer, 10);//(timer - 0.2f)
+            transform.position += Vector3.down * currentFallSpeed * Time.deltaTime;
+
+            GroundCheck();
             yield return null;
         }
 
         isFalling = false;
     }
+    
+    void GroundCheck()
+    {
+        // 추후 높게 띄어 졌을 때, 최고치 높이인 부분 부터 타임을 측정하여 땅에 도달할 때까지를 비교해 그 값이 클 경우 낙하 데미지 추가
+        if (transform.position.y <= 0)
+        {
+            
+            isGround = true;
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        }
+    }
+
 }

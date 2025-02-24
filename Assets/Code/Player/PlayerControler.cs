@@ -23,12 +23,13 @@ public class PlayerControler : MonoBehaviour
 
     //private Vector3 lastMoveDelta = Vector3.zero; // 이전 방향 저장
 
+
     private void Start()
     {
         TryGetComponent<CharacterController>(out controller);
-        controller.Move(Vector3.zero); // 초기화용 Move() 호출
+        //controller.Move(Vector3.zero); // 초기화용 Move() 호출
 
-        //StartCoroutine("Walk2");
+        
     }
 
     private void Update()
@@ -104,19 +105,16 @@ public class PlayerControler : MonoBehaviour
                 firstSpin = true;
             }
 
-            //if ( Mathf.Abs(moveDelta.x) == 1f || Mathf.Abs(moveDelta.z) == 1f)
+            
             if (moveDelta.sqrMagnitude > 0.1f)
             {
 
-                //transform.forward = moveArrow;
+                
                 toRotation = Quaternion.LookRotation(moveDelta);
                 transform.rotation = toRotation;
 
             }
             
-
-
-
             moveArrow.Normalize();
             controller.Move(moveArrow * (playermoveSpeed * Time.deltaTime));
         }
@@ -167,7 +165,14 @@ public class PlayerControler : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log("충돌한 오브젝트: ");
+        //Debug.Log("PlayerControler에선 측정이 되었음 ");
+        //OnGrounded?.Invoke(this);
+
+        //if (controller.isGrounded)
+
+        //transform.rotation = Quaternion.Euler(0, Mathf.Atan2(moveDelta.x, moveDelta.z) * Mathf.Rad2Deg, 0);
+
+
     }
 
 }
