@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3d233417553be2a498e499e263523edf
+guid: eee2fa12aedb53f4caac692063dac97f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -259,23 +259,23 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: fighter5(Clone)
+    - name: smoothfighter5(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: "\uBA38\uB9AC"
-      parentName: fighter5(Clone)
+      parentName: smoothfighter5(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
     - name: neo_body_hw
-      parentName: fighter5(Clone)
+      parentName: smoothfighter5(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
     - name: metarig.001
-      parentName: fighter5(Clone)
+      parentName: smoothfighter5(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
@@ -401,7 +401,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 917e1e757045e694c88f466db01e4c6f,
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9614ea2580f07634c85831428b765140,
     type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
