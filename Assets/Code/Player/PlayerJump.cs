@@ -38,8 +38,6 @@ public class PlayerJump : MonoBehaviour
                 {
                     isGround = false;
                     yield return StartCoroutine(Jump());
-                    //yield return new WaitForSeconds(1f);
-                    //yield break;
                 }
 
             }
@@ -73,18 +71,14 @@ public class PlayerJump : MonoBehaviour
             
 
             transform.position = new Vector3(transform.position.x,
-                Mathf.Lerp(startPos.y, jumpPos.y, 1-(1- elapsed / duration)*(1- elapsed / duration)),//elapsed / duration
+                Mathf.Lerp(startPos.y, jumpPos.y, 1-(1- elapsed / duration)*(1- elapsed / duration)),//EaseOut
                 transform.position.z);
 
 
             elapsed += Time.deltaTime;
             yield return null; // 다음 프레임까지 대기
         }
-        //Vector3 jumpPos = transform.position + new Vector3(0, 1, 0);
-
-
-
-
+        
         transform.position = new Vector3(transform.position.x, jumpPos.y, transform.position.z);
 
         isGround = false; // 점프 완료
@@ -107,6 +101,7 @@ public class PlayerJump : MonoBehaviour
             timer += Time.deltaTime;
             currentFallSpeed = Mathf.Min(1 + acceleration * timer, 10);//(timer - 0.2f)
             transform.position += Vector3.down * currentFallSpeed * Time.deltaTime;
+            
 
             GroundCheck();
             yield return null;
@@ -117,6 +112,7 @@ public class PlayerJump : MonoBehaviour
     
     void GroundCheck()
     {
+        //Debug.Log(1);
         // 추후 높게 띄어 졌을 때, 최고치 높이인 부분 부터 타임을 측정하여 땅에 도달할 때까지를 비교해 그 값이 클 경우 낙하 데미지 추가
         if (transform.position.y <= 0)
         {

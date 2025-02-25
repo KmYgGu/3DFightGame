@@ -12,7 +12,10 @@ public class PlayerControler : MonoBehaviour
 
     // 스크립트를 하나 만들어서 판정 콜라이더를 별도의 이름으로 관리
 
-    CharacterController controller;
+    private CharacterController controller;
+    [SerializeField] private Animator playerAnimtor;
+
+    private int animHash_walk = Animator.StringToHash("isWalk");
 
     [SerializeField] private float playermoveSpeed;
 
@@ -27,9 +30,12 @@ public class PlayerControler : MonoBehaviour
     private void Start()
     {
         TryGetComponent<CharacterController>(out controller);
+        //TryGetComponent<Animator>(out playerAnimtor);
+        playerAnimtor = gameObject.GetComponentInChildren<Animator>();
+
         //controller.Move(Vector3.zero); // 초기화용 Move() 호출
 
-        
+
     }
 
     private void Update()
@@ -97,6 +103,8 @@ public class PlayerControler : MonoBehaviour
 
         if (moveArrow != Vector3.zero)
         {
+            //playerAnimtor.SetBool(animHash_walk, true);
+
 
             if (!firstSpin)
             {
@@ -120,6 +128,7 @@ public class PlayerControler : MonoBehaviour
         }
         else
         {
+            //playerAnimtor.SetBool(animHash_walk, false);
             firstSpin = false;
         }
     }
