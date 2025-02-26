@@ -7,8 +7,11 @@ public class PlayerJump : MonoBehaviour
 {
     [SerializeField]private bool isGround = true;
     private bool isFalling = false;
-
     private float acceleration = 13;
+
+    private Animator animator;
+    private int animHash_idleJump = Animator.StringToHash("isJump");// 나중에 애니메이션 트리로 만들어야함
+    private int animHash_isGround = Animator.StringToHash("isGround");
 
 
     private void Update()
@@ -19,6 +22,7 @@ public class PlayerJump : MonoBehaviour
 
     private void Start()
     {
+        TryGetComponent<Animator>(out animator);
         StartCoroutine("FallJump");
         
     }
@@ -37,6 +41,7 @@ public class PlayerJump : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.Space)&& isGround)
                 {
                     isGround = false;
+                    
                     yield return StartCoroutine(Jump());
                 }
 
@@ -48,8 +53,7 @@ public class PlayerJump : MonoBehaviour
                     yield return StartCoroutine("Falling");
                     
                 }
-                
-
+             
             }
             yield return null;
         }
@@ -59,6 +63,7 @@ public class PlayerJump : MonoBehaviour
     {
 
         Debug.Log("점프");
+        animator.SetTrigger(animHash_idleJump);
 
         Vector3 startPos = transform.position;
         Vector3 jumpPos = transform.position + new Vector3(0, 1, 0);
@@ -68,7 +73,6 @@ public class PlayerJump : MonoBehaviour
 
         while (elapsed < duration)
         {
-            
 
             transform.position = new Vector3(transform.position.x,
                 Mathf.Lerp(startPos.y, jumpPos.y, 1-(1- elapsed / duration)*(1- elapsed / duration)),//EaseOut
@@ -118,6 +122,7 @@ public class PlayerJump : MonoBehaviour
         {
             
             isGround = true;
+            animator.SetTrigger(animHash_isGround);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         }
     }

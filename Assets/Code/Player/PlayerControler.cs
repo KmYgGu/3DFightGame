@@ -55,6 +55,7 @@ public class PlayerControler : MonoBehaviour
         moveArrow.z = Input.GetAxisRaw("Vertical");
 
         //  방향키 입력이 있으면 목표 각도 업데이트
+        //if (moveArrow != Vector3.zero)
         if (moveArrow.x != 0 || moveArrow.z != 0)
         {
             float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
@@ -70,6 +71,8 @@ public class PlayerControler : MonoBehaviour
                 //  90도 이상 차이 나면 즉시 회전
                 currentAngle = targetAngle;
             }
+            playerAnimtor.SetBool(animHash_walk, true);
+
             //  회전 적용
             transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
             //transform.rotation = Quaternion.Euler(0, currentAngle, 0);
@@ -79,7 +82,7 @@ public class PlayerControler : MonoBehaviour
         }
         else
         {
-
+            playerAnimtor.SetBool(animHash_walk, false);
         }
             
     }
