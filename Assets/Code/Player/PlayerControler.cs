@@ -5,13 +5,6 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour
 {
    
-    // 여기선 캐릭터 점프를 제외한 이동만을 구현
-    // 점프할땐 캐릭터 매쉬(metaRig)만 점프
-
-    // 캐릭터 부위 별로 판정 시스템()을 만들고 
-
-    // 스크립트를 하나 만들어서 판정 콜라이더를 별도의 이름으로 관리
-
     private CharacterController controller;
     [SerializeField] private Animator playerAnimtor;
 
@@ -22,7 +15,9 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] private Vector3 moveDelta;
     [SerializeField] private Vector3 moveArrow;
     Quaternion toRotation;//
-    [SerializeField]private bool firstSpin = false;
+    [SerializeField] private bool firstSpin = false;
+
+    [SerializeField] private Queue<Vector3> moveHistory = new Queue<Vector3>();
 
     //private Vector3 lastMoveDelta = Vector3.zero; // 이전 방향 저장
 
@@ -30,12 +25,11 @@ public class PlayerControler : MonoBehaviour
     private void Start()
     {
         TryGetComponent<CharacterController>(out controller);
-        //TryGetComponent<Animator>(out playerAnimtor);
         playerAnimtor = gameObject.GetComponentInChildren<Animator>();
 
         //controller.Move(Vector3.zero); // 초기화용 Move() 호출
 
-
+        //StartCoroutine(HandleRotation()); // 코루틴 시작
     }
 
     private void Update()
@@ -43,95 +37,54 @@ public class PlayerControler : MonoBehaviour
         Walk();
 
     }
-    private IEnumerator Walk2()
-    {
-        while (true)
-        {
-            /*moveDelta.x = Input.GetAxis("Horizontal");
-            moveDelta.y = 0.0f;
-            moveDelta.z = Input.GetAxis("Vertical");*/
 
-            moveArrow.x = Input.GetAxisRaw("Horizontal");
-            moveArrow.y = 0.0f;
-            moveArrow.z = Input.GetAxisRaw("Vertical");
 
-            //if (moveArrow != Vector3.zero)
-            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-            {
-                if (!firstSpin)
-                {
-                    transform.forward = moveArrow;
-                    firstSpin = true;
-                }
+    private float currentAngle = 0.0f; // 현재 회전 각도
+    private float targetAngle = 0.0f; // 목표 회전 각도
 
-                if (Mathf.Abs(moveArrow.x) == 1f || Mathf.Abs(moveArrow.z) == 1f)
-                {
-                    //transform.forward = moveArrow;
-                    if (Mathf.Abs(moveArrow.x) == 1f || Mathf.Abs(moveArrow.z) == 1f)
-                    {
-                        toRotation = Quaternion.LookRotation(moveArrow);
-                        transform.rotation = toRotation;
-                    }
-                }
-
-                
-                    
-
-                moveArrow.Normalize();
-                controller.Move(moveArrow * (playermoveSpeed * Time.deltaTime));
-            }
-            else
-            {
-                firstSpin = false;
-            }
-
-            yield return null; // 다음 프레임까지 대기
-        }
-    }
 
     private void Walk()
     {
-        moveDelta.x = Input.GetAxis("Horizontal");
-        moveDelta.y = 0.0f;
-        moveDelta.z = Input.GetAxis("Vertical");
+
+        //moveDelta.x = Input.GetAxis("Horizontal");
+        //moveDelta.y = 0.0f;
+        //moveDelta.z = Input.GetAxis("Vertical");
 
         moveArrow.x = Input.GetAxisRaw("Horizontal");
         moveArrow.y = 0.0f;
         moveArrow.z = Input.GetAxisRaw("Vertical");
 
-        moveArrow.Normalize();
-
-        if (moveArrow != Vector3.zero)
+        //  방향키 입력이 있으면 목표 각도 업데이트
+        if (moveArrow.x != 0 || moveArrow.z != 0)
         {
-            //playerAnimtor.SetBool(animHash_walk, true);
+            float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
+            targetAngle = Mathf.Round(newAngle / 45.0f) * 45.0f; // 8방향 스냅
 
-
-            if (!firstSpin)
+            //  현재 각도와 목표 각도가 ±45도 이내면 부드러운 회전
+            if (Mathf.Abs(Mathf.DeltaAngle(currentAngle, targetAngle)) <= 45f)
             {
-                transform.forward = moveArrow;
-
-                firstSpin = true;
+                currentAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * 30);
             }
-
-            
-            if (moveDelta.sqrMagnitude > 0.1f)
+            else
             {
-
-                
-                toRotation = Quaternion.LookRotation(moveDelta);
-                transform.rotation = toRotation;
-
+                //  90도 이상 차이 나면 즉시 회전
+                currentAngle = targetAngle;
             }
-            
+            //  회전 적용
+            transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
+            //transform.rotation = Quaternion.Euler(0, currentAngle, 0);
+
             moveArrow.Normalize();
             controller.Move(moveArrow * (playermoveSpeed * Time.deltaTime));
         }
         else
         {
-            //playerAnimtor.SetBool(animHash_walk, false);
-            firstSpin = false;
+
         }
+            
     }
+
+    
 
     void notuse()
     {
