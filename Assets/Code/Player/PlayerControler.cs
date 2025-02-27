@@ -9,6 +9,7 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] private Animator playerAnimtor;
 
     private int animHash_walk = Animator.StringToHash("isWalk");
+    private int animHash_Run = Animator.StringToHash("isRun");
 
     [SerializeField] private float playermoveSpeed;
 
@@ -53,6 +54,7 @@ public class PlayerControler : MonoBehaviour
             isRunning = false;
             goRun = false;
             playerAnimtor.SetBool(animHash_walk, false);
+            playerAnimtor.SetBool(animHash_Run, false);
         }
         else
         {
@@ -76,24 +78,10 @@ public class PlayerControler : MonoBehaviour
         //if (moveArrow != Vector3.zero)     
         if (moveArrow.x != 0 || moveArrow.z != 0)
         {
-            float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
-            targetAngle = Mathf.Round(newAngle / 45.0f) * 45.0f; // 8방향 스냅
-
-            //  현재 각도와 목표 각도가 ±45도 이내면 부드러운 회전
-            if (Mathf.Abs(Mathf.DeltaAngle(currentAngle, targetAngle)) <= 45f)
-            {
-                currentAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * 30);
-            }
-            else
-            {
-                //  90도 이상 차이 나면 즉시 회전
-                currentAngle = targetAngle;
-            }
+            
             playerAnimtor.SetBool(animHash_walk, true);
 
-            //  회전 적용
-            transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
-            //transform.rotation = Quaternion.Euler(0, currentAngle, 0);
+            CharMoveSpin();
 
             Vector3 normalizedMove = moveArrow.normalized;
             controller.Move(normalizedMove * (playermoveSpeed * Time.deltaTime));            
@@ -114,6 +102,8 @@ public class PlayerControler : MonoBehaviour
                 if (moveArrow == lastInputDirection && (Time.time - lastTapTime) < doubleTapThreshold)
                 {
                     Debug.Log("Running!");
+                    playerAnimtor.SetBool(animHash_walk, false);
+                    playerAnimtor.SetBool(animHash_Run, true);
                     isRunning = true;
                     goRun = true;
                 }
@@ -124,6 +114,8 @@ public class PlayerControler : MonoBehaviour
             }
             else if ((Input.GetButton("Horizontal") || Input.GetButton("Vertical")) && (goRun) && (isRunning))
             {
+                CharMoveSpin();
+
                 Vector3 normalizedMove = moveArrow.normalized;
                 controller.Move(normalizedMove * (playermoveSpeed *2* Time.deltaTime));
             }
@@ -131,7 +123,28 @@ public class PlayerControler : MonoBehaviour
 
             
     }
-        
+
+    private void CharMoveSpin()
+    {
+        float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
+        targetAngle = Mathf.Round(newAngle / 45.0f) * 45.0f; // 8방향 스냅
+
+        //  현재 각도와 목표 각도가 ±45도 이내면 부드러운 회전
+        if (Mathf.Abs(Mathf.DeltaAngle(currentAngle, targetAngle)) <= 45f)
+        {
+            currentAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * 30);
+        }
+        else
+        {
+            //  90도 이상 차이 나면 즉시 회전
+            currentAngle = targetAngle;
+        }
+
+        //  회전 적용
+        transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
+        //transform.rotation = Quaternion.Euler(0, currentAngle, 0);
+    }
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log("PlayerControler에선 측정이 되었음 ");

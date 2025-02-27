@@ -6,13 +6,31 @@ public class PlayerHitBox : MonoBehaviour
 {
     private bool isInvulnerable = false; // 일정 시간 동안 무적 여부 체크
 
+    [SerializeField] Animator animator;
+
+    private int animHash_Damage1 = Animator.StringToHash("DamageS");
+    private int animHash_Damage2 = Animator.StringToHash("DamageM");
+    private int animHash_Damage4 = Animator.StringToHash("DamageF");
+
+    private void Start()
+    {
+        animator = GetComponentInParent<Animator>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.CompareTag("Ground")) return;
+
+        if (other.CompareTag("PlayerBody")) return;
 
         if (isInvulnerable) return;
 
-        //Debug.Log("감지됨");
+        
+        //Debug.Log(other.gameObject.name);
+
+
+        animator.SetTrigger(animHash_Damage1);
         StartCoroutine(ActivateInvulnerability());
     }
 
