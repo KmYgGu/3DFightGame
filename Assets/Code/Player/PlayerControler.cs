@@ -7,6 +7,7 @@ public class PlayerControler : MonoBehaviour
    
     private CharacterController controller;
     [SerializeField] private Animator playerAnimtor;
+    
 
     private int animHash_walk = Animator.StringToHash("isWalk");
     private int animHash_Run = Animator.StringToHash("isRun");
@@ -104,6 +105,8 @@ public class PlayerControler : MonoBehaviour
                     Debug.Log("Running!");
                     playerAnimtor.SetBool(animHash_walk, false);
                     playerAnimtor.SetBool(animHash_Run, true);
+                                      
+
                     isRunning = true;
                     goRun = true;
                 }

@@ -13,8 +13,11 @@ public class PlayerAttack : MonoBehaviour
     }
 
     private Stack<float> attackStack = new Stack<float>(); // 공격 시간을 저장할 스택
-    float pressStartTime = 0f;
-    bool isHolding = false;
+    private float pressStartTime = 0f;
+    private bool isHolding = false;
+
+    [SerializeField]private bool canAttack = true;//공격을 시도하면 어택박스가 사라지기 전까진 추가적으로 공격불가
+    private bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
 
     private const int maxAttacks = 4; // 최대 4번 공격 가능
     private float lastAttackTime = 0f; // 마지막 공격 시간 기록
@@ -25,6 +28,9 @@ public class PlayerAttack : MonoBehaviour
     private string attackType;
 
     private Animator CharAni;
+    //private AnimatorStateInfo stateInfo;
+    private AnimationTagReader tagReader;
+
     private int animHash_Attack1 = Animator.StringToHash("isAttack1");
     private int animHash_Attack2 = Animator.StringToHash("isAttack2");
     private int animHash_Attack3 = Animator.StringToHash("isAttack3");
@@ -35,13 +41,22 @@ public class PlayerAttack : MonoBehaviour
     private int animHash_SAttack3 = Animator.StringToHash("isSAttack3");
     private int animHash_SAttack4 = Animator.StringToHash("isSAttack4");
 
-    //[SerializeField]private Animation[] Attackanis;// 공격 애니메이션 별 종료시간을 참고하기 위함
+    private BodyTail bodyTail;
+
 
     [SerializeField]private AnimationClip[] animationClips;
+
+    public AnimationClip GetAnimationClip(int aniNo)
+    {
+        return animationClips[aniNo];
+    }
 
     private void Start()
     {
         TryGetComponent<Animator>(out CharAni);
+        TryGetComponent<BodyTail>(out bodyTail); // 같은 오브젝트에 있는 스크립트 가져오기
+        TryGetComponent<AnimationTagReader>(out tagReader);
+        
     }
     
     void Update()
@@ -53,39 +68,59 @@ public class PlayerAttack : MonoBehaviour
 
 
     #region 콤보 공격
+    public void changeAttackCan()
+    {
+        canAttack = true;
+    }
+
+    public void changeLastAttack()
+    {
+        waitLastAttack = true;
+    }
+
     void HandleInput()// 콤보 공격
     {
-        if (Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks)//공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
+        if (waitLastAttack)
         {
-            isHolding = true;
-            pressStartTime = Time.time;
-            
+            //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
+            if ((Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks))
+            {
+
+                isHolding = true;
+                pressStartTime = Time.time;
+
+            }
+
+            if (Input.GetButtonUp("Fire1") && attackStack.Count < maxAttacks && isHolding)// 
+            {
+                float heldDuration = Time.time - pressStartTime;
+
+                if(canAttack)
+                attackStack.Push(heldDuration); // 공격 스택에 추가
+
+
+                lastAttackTime = Time.time; // 마지막 공격 시간 갱신
+
+
+                ProcessAttackQueue();
+
+                isHolding = false;
+            }
+
+            /*if (attackStack.Count >= maxAttacks)// 사실상 마지막 키입력 없음이 해주니 없어도 됨
+            {
+                Debug.Log(" 공격을 최대 횟수만틈 시도함");
+                ResetAttacks();
+            }*/
+
+            if (Time.time - pressStartTime >= maxHoldTime && isHolding)//isHolding && 
+            {
+                isHolding = false;
+                ForceReleaseFire(); // 2초 초과 시 강제 해제
+            }
         }
 
-        if (Input.GetButtonUp("Fire1") && attackStack.Count < maxAttacks && isHolding)// 
-        {
-            float heldDuration = Time.time - pressStartTime;
-            
-            attackStack.Push(heldDuration); // 공격 스택에 추가
-                   
-
-            lastAttackTime = Time.time; // 마지막 공격 시간 갱신
-            ProcessAttackQueue();
-            
-            isHolding = false;
-        }
-
-        if(attackStack.Count >= maxAttacks)
-        {
-            Debug.Log(" 공격을 최대 횟수만틈 시도함");
-            ResetAttacks();
-        }
-
-        if (Time.time - pressStartTime >= maxHoldTime && isHolding)//isHolding && 
-        {
-            isHolding = false;
-            ForceReleaseFire(); // 2초 초과 시 강제 해제
-        }
+        
     }
 
     void CheckResetTimer()// 공격 키를 누른 후, 제한 시간 안에 다음 공격을 날리지 않으면 콤보를 초기화
@@ -94,10 +129,18 @@ public class PlayerAttack : MonoBehaviour
         {
 
             if (attackType == "일반 공격")
-            resetTime = animationClips[attackStack.Count-1].length - 0.2f;// + 0.1f
+            {
+                resetTime = animationClips[attackStack.Count - 1].length;// - 0.1f;// + 0.1f
+                                
+            }
+            
 
             if (attackType == "강한 공격")
-                resetTime = animationClips[attackStack.Count + 3].length - 0.2f;// + 0.1f
+            {
+                resetTime = animationClips[attackStack.Count + 3].length;// - 0.1f;// + 0.1f
+                //bodyTail.SetTail(attackStack.Count + 3);
+            }
+                
 
 
             if (Time.time - lastAttackTime >= resetTime)
@@ -119,9 +162,11 @@ public class PlayerAttack : MonoBehaviour
     {
         if (attackStack.Count > 0)
         {
+            
+
             int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
             float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
-            //Debug.Log($"{attackNumber}: {attackTime}");
+            Debug.Log($"{attackNumber}: {attackTime}");
              
             ExecuteAttack(attackTime, attackNumber);
         }
@@ -130,28 +175,39 @@ public class PlayerAttack : MonoBehaviour
     void ExecuteAttack(float heldDuration, int attackNumber)// 누른 시간에 따라 공격을 분류, 몇 번째 공격인지 따라 번호를 부여
     {
         //string attackType;
+        if (canAttack)
+        {
+            if (heldDuration < 0.2f)
+            {
+                canAttack = false;
+                attackType = "일반 공격";
+                bodyTail.SetTail(attackNumber - 1);
+                PlayAnimation(attackNumber);
 
-        if (heldDuration < 0.3f)
-        {
-            attackType = "일반 공격";
-            PlayAnimation(attackNumber);
+                if(attackNumber == 4)
+                    waitLastAttack = false;
+
+
+            }
+            else //if (heldDuration < 1.5f)
+            {
+                canAttack = false;
+                attackType = "강한 공격";
+                bodyTail.SetTail(attackNumber + 3);
+                PlaySattackAnimation(attackNumber);
+
+                if (attackNumber == 4)
+                    waitLastAttack = false;
+            }
         }
-        else if (heldDuration < 1.5f)
-        {
-            attackType = "강한 공격";
-            PlaySattackAnimation(attackNumber);
-        }
-        else
-        {
-            attackType = "특수 기술 발동!";
-        }
+
 
         Debug.Log($"{attackNumber}번째 {attackType}!  시간 : {heldDuration}");
     }
 
     void ForceReleaseFire()// 너무 오래 누르면 강제로 특수 기술로 변경
     {
-        Debug.Log(" 2초 초과! 강제로 키를 뗌 → 특수 기술 발동!");
+        Debug.Log(" 1.5초 초과! 강제로 키를 뗌");
         RegisterAttack();
     }
 
@@ -170,6 +226,7 @@ public class PlayerAttack : MonoBehaviour
         attackStack.Clear(); // 공격 스택 초기화
         lastAttackTime = 0f; // 타이머 초기화
         Debug.Log("공격 초기화!");
+        bodyTail.SetTail(30);
     }
 
     void PlayAnimation(int attackNumber)// 공격 번호에 따라 애니메이션을 부여
@@ -183,6 +240,11 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_Attack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
+
+        //AnimationTag currentTag = tagReader.GetCurrentAnimationTag();
+        //tagReader.GetCurrentAnimationTag();
+        //Debug.Log("플레이어 현재 애니메이션 태그: " + currentTag);
+        StartCoroutine("GetAnimationTag");
     }
 
     void PlaySattackAnimation(int attackNumber)// 공격 번호에 따라 애니메이션을 부여
@@ -196,6 +258,16 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_SAttack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
+    }
+
+    private IEnumerator GetAnimationTag()
+    {
+        yield return new WaitForEndOfFrame(); // 한 프레임 대기 후 실행
+
+        AnimationTag currentTag = tagReader.GetCurrentAnimationTag();
+        tagReader.GetCurrentAnimationTag();
+        Debug.Log("플레이어 현재 애니메이션 태그: " + currentTag);
+
     }
     #endregion
 
