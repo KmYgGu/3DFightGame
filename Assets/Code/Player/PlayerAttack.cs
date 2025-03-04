@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +24,7 @@ public class PlayerAttack : MonoBehaviour
     private float lastAttackTime = 0f; // 마지막 공격 시간 기록
     private float resetTime = 3f; // 3초 후 초기화     나중에 애니메이션 프레임에 따라 시간을 조정
 
-    private const float maxHoldTime = 1.5f; // 누른 시간이 2초 초과 시 강제 해제
+    private const float maxHoldTime = 1f; // 누른 시간이 2초 초과 시 강제 해제
 
     private string attackType;
 
@@ -43,7 +44,9 @@ public class PlayerAttack : MonoBehaviour
 
     private BodyTail bodyTail;
 
-
+    // 플레이어 스텟
+    private PlayerStat playerStat;
+    
     [SerializeField]private AnimationClip[] animationClips;
 
     public AnimationClip GetAnimationClip(int aniNo)
@@ -56,6 +59,8 @@ public class PlayerAttack : MonoBehaviour
         TryGetComponent<Animator>(out CharAni);
         TryGetComponent<BodyTail>(out bodyTail); // 같은 오브젝트에 있는 스크립트 가져오기
         TryGetComponent<AnimationTagReader>(out tagReader);
+
+        playerStat = gameObject.GetComponentInParent<PlayerStat>();
         
     }
     
@@ -64,6 +69,7 @@ public class PlayerAttack : MonoBehaviour
 
         HandleInput();
         CheckResetTimer();
+                
     }
 
 
@@ -76,11 +82,13 @@ public class PlayerAttack : MonoBehaviour
     public void changeLastAttack()
     {
         waitLastAttack = true;
+        
     }
 
     void HandleInput()// 콤보 공격
     {
-        if (waitLastAttack)
+        // 마지막 공격을 다 기다리고 현재 애니메이션 상태가 표준 상태이거나 공격중일 때
+        if (waitLastAttack && (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack))
         {
             //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
             if ((Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks))
@@ -163,10 +171,9 @@ public class PlayerAttack : MonoBehaviour
         if (attackStack.Count > 0)
         {
             
-
             int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
             float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
-            Debug.Log($"{attackNumber}: {attackTime}");
+            //Debug.Log($"{attackNumber}: {attackTime}");
              
             ExecuteAttack(attackTime, attackNumber);
         }
@@ -187,7 +194,7 @@ public class PlayerAttack : MonoBehaviour
                 if(attackNumber == 4)
                     waitLastAttack = false;
 
-
+                
             }
             else //if (heldDuration < 1.5f)
             {
@@ -199,10 +206,11 @@ public class PlayerAttack : MonoBehaviour
                 if (attackNumber == 4)
                     waitLastAttack = false;
             }
+            Debug.Log($"{attackNumber}번째 {attackType}!  시간 : {heldDuration}");
         }
 
 
-        Debug.Log($"{attackNumber}번째 {attackType}!  시간 : {heldDuration}");
+        //Debug.Log($"{attackNumber}번째 {attackType}!  시간 : {heldDuration}");
     }
 
     void ForceReleaseFire()// 너무 오래 누르면 강제로 특수 기술로 변경
@@ -227,6 +235,7 @@ public class PlayerAttack : MonoBehaviour
         lastAttackTime = 0f; // 타이머 초기화
         Debug.Log("공격 초기화!");
         bodyTail.SetTail(30);
+        EventManager.Instance.TriggerEvent();
     }
 
     void PlayAnimation(int attackNumber)// 공격 번호에 따라 애니메이션을 부여
@@ -240,11 +249,10 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_Attack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
+            
 
-        //AnimationTag currentTag = tagReader.GetCurrentAnimationTag();
-        //tagReader.GetCurrentAnimationTag();
-        //Debug.Log("플레이어 현재 애니메이션 태그: " + currentTag);
-        StartCoroutine("GetAnimationTag");
+        EventManager.Instance.TriggerEvent();
+        //StartCoroutine("GetAnimationTag");
     }
 
     void PlaySattackAnimation(int attackNumber)// 공격 번호에 따라 애니메이션을 부여
@@ -258,17 +266,9 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_SAttack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
+        EventManager.Instance.TriggerEvent();
     }
 
-    private IEnumerator GetAnimationTag()
-    {
-        yield return new WaitForEndOfFrame(); // 한 프레임 대기 후 실행
-
-        AnimationTag currentTag = tagReader.GetCurrentAnimationTag();
-        tagReader.GetCurrentAnimationTag();
-        Debug.Log("플레이어 현재 애니메이션 태그: " + currentTag);
-
-    }
     #endregion
 
 

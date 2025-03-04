@@ -28,12 +28,14 @@ public class PlayerControler : MonoBehaviour
     private float lastTapTime = 0f;
     private readonly float doubleTapThreshold = 0.8f; // 두 번 탭 사이 최대 허용 시간 (초)
 
+    // 플레이어 스텟
+    private PlayerStat playerStat;
 
     private void Start()
     {
         TryGetComponent<CharacterController>(out controller);
         playerAnimtor = gameObject.GetComponentInChildren<Animator>();
-
+        TryGetComponent<PlayerStat>(out playerStat);
         //controller.Move(Vector3.zero); // 초기화용 Move() 호출
 
         //StartCoroutine(HandleRotation()); // 코루틴 시작
@@ -41,7 +43,11 @@ public class PlayerControler : MonoBehaviour
 
     private void Update()
     {
-        WalkAndRun();
+        if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.move || playerStat.aniState == AnimationTag.Jump)
+        {
+            WalkAndRun();
+        }
+        
 
     }
 
@@ -56,6 +62,7 @@ public class PlayerControler : MonoBehaviour
             goRun = false;
             playerAnimtor.SetBool(animHash_walk, false);
             playerAnimtor.SetBool(animHash_Run, false);
+            EventManager.Instance.TriggerEvent();//idle
         }
         else
         {
@@ -81,6 +88,7 @@ public class PlayerControler : MonoBehaviour
         {
             
             playerAnimtor.SetBool(animHash_walk, true);
+            EventManager.Instance.TriggerEvent();//walk
 
             CharMoveSpin();
 
@@ -105,7 +113,8 @@ public class PlayerControler : MonoBehaviour
                     Debug.Log("Running!");
                     playerAnimtor.SetBool(animHash_walk, false);
                     playerAnimtor.SetBool(animHash_Run, true);
-                                      
+                    EventManager.Instance.TriggerEvent();//Run
+
 
                     isRunning = true;
                     goRun = true;
