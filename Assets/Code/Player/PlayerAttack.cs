@@ -82,7 +82,14 @@ public class PlayerAttack : MonoBehaviour
     public void changeLastAttack()
     {
         waitLastAttack = true;
-        
+        //EventManager.Instance.TriggerEvent();
+        StartCoroutine("oneFrameLateDo");
+    }
+    IEnumerator oneFrameLateDo()
+    {
+        //yield return new WaitForEndOfFrame(); // 한 프레임 대기 후 실행
+        yield return new WaitForSeconds(0.1f);
+        EventManager.Instance.TriggerEvent();
     }
 
     void HandleInput()// 콤보 공격
@@ -156,6 +163,7 @@ public class PlayerAttack : MonoBehaviour
                 Debug.Log($" {resetTime}초 동안 추가 공격 없음");
                 ResetAttacks();
             }
+
         }
             
 

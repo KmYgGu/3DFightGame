@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.177579, g: 0.22232251, b: 0.30451912, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1793,10 +1792,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9614ea2580f07634c85831428b765140,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1579764560}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9614ea2580f07634c85831428b765140,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1579764562}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9614ea2580f07634c85831428b765140,
         type: 3}
@@ -2792,13 +2787,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1
+  m_Height: 0.7
   m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!4 &1408786598
 Transform:
   m_ObjectHideFlags: 0
@@ -3342,19 +3337,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 870588785}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1579764560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579764554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971f626e2e0f9dc4483a963fa76a069c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGround: 1
 --- !u!114 &1579764562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3494,6 +3476,7 @@ GameObject:
   - component: {fileID: 1591838867}
   - component: {fileID: 1591838866}
   - component: {fileID: 1591838869}
+  - component: {fileID: 1591838870}
   m_Layer: 0
   m_Name: FighterControl
   m_TagString: PlayerBody
@@ -3538,13 +3521,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1
+  m_Height: 0.7
   m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!4 &1591838868
 Transform:
   m_ObjectHideFlags: 0
@@ -3574,6 +3557,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AniState: 0
+--- !u!114 &1591838870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591838865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971f626e2e0f9dc4483a963fa76a069c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGround: 1
 --- !u!1 &1674354016
 GameObject:
   m_ObjectHideFlags: 0

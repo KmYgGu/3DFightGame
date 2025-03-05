@@ -54,6 +54,7 @@ public class PlayerControler : MonoBehaviour
     void WalkAndRun()
     {
         moveArrow = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+        
 
         // 입력이 없으면 달리기 상태를 해제
         if (moveArrow == Vector3.zero)
@@ -93,7 +94,8 @@ public class PlayerControler : MonoBehaviour
             CharMoveSpin();
 
             Vector3 normalizedMove = moveArrow.normalized;
-            controller.Move(normalizedMove * (playermoveSpeed * Time.deltaTime));            
+            controller.Move(normalizedMove * (playermoveSpeed * Time.deltaTime));
+            //controller.Move(new Vector3(normalizedMove.x * (playermoveSpeed * Time.deltaTime), 0, normalizedMove.z * (playermoveSpeed * Time.deltaTime)));
         }    
             
     }

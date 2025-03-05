@@ -13,6 +13,7 @@ public class PlayerJump : MonoBehaviour
     private int animHash_idleJump = Animator.StringToHash("isJump");// 나중에 애니메이션 트리로 만들어야함
     private int animHash_isGround = Animator.StringToHash("isGround");
 
+    private CharacterController controller;
 
     private void Update()
     {
@@ -22,7 +23,10 @@ public class PlayerJump : MonoBehaviour
 
     private void Start()
     {
-        TryGetComponent<Animator>(out animator);
+        TryGetComponent<CharacterController>(out controller);
+        animator = GetComponentInChildren<Animator>();//캐릭터 컨트롤러 위치에 놓음
+
+        //TryGetComponent<Animator>(out animator);
         StartCoroutine("FallJump");
         
     }
@@ -62,7 +66,7 @@ public class PlayerJump : MonoBehaviour
     IEnumerator Jump()
     {
 
-        Debug.Log("점프");
+        //Debug.Log("점프");
         animator.SetTrigger(animHash_idleJump);
 
         Vector3 startPos = transform.position;
@@ -100,11 +104,12 @@ public class PlayerJump : MonoBehaviour
         float currentFallSpeed = 0f;
         while (!isGround) // 바닥에 닿을 때까지 반복
         {
-            //transform.position += new Vector3(0, Physics.gravity.y*Time.deltaTime, 0);
-
+            
             timer += Time.deltaTime;
             currentFallSpeed = Mathf.Min(1 + acceleration * timer, 10);//(timer - 0.2f)
-            transform.position += Vector3.down * currentFallSpeed * Time.deltaTime;
+            //transform.position += Vector3.down * currentFallSpeed * Time.deltaTime;//자식 전용
+
+            controller.Move(Vector3.down * currentFallSpeed * Time.deltaTime);//캐릭터 컨트롤러 전용
             
 
             GroundCheck();
@@ -116,11 +121,11 @@ public class PlayerJump : MonoBehaviour
     
     void GroundCheck()
     {
-        //Debug.Log(1);
+        
         // 추후 높게 띄어 졌을 때, 최고치 높이인 부분 부터 타임을 측정하여 땅에 도달할 때까지를 비교해 그 값이 클 경우 낙하 데미지 추가
         if (transform.position.y <= 0)
         {
-            
+            //Debug.Log(1);
             isGround = true;
             animator.SetTrigger(animHash_isGround);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
