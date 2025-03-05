@@ -7,9 +7,12 @@ public enum AnimationTag
 {
     None = 0,
     Idle = 1,
-    move = 2,
+    walk = 2,
     Jump = 3,
-    Attack = 4
+    Attack = 4,
+    Guard = 5,
+    JumpAttack = 6,
+    Run = 7,
 }
 public class AnimationTagManager : MonoBehaviour
 {
@@ -39,9 +42,12 @@ public class AnimationTagManager : MonoBehaviour
     {
         // Animator의 태그 이름을 해시값으로 변환하여 Dictionary에 저장
         tagDictionary[Animator.StringToHash("Idle")] = AnimationTag.Idle;
-        tagDictionary[Animator.StringToHash("move")] = AnimationTag.move;
+        tagDictionary[Animator.StringToHash("walk")] = AnimationTag.walk;
         tagDictionary[Animator.StringToHash("Jump")] = AnimationTag.Jump;
         tagDictionary[Animator.StringToHash("Attack")] = AnimationTag.Attack;
+        tagDictionary[Animator.StringToHash("Guard")] = AnimationTag.Guard;
+        tagDictionary[Animator.StringToHash("JumpAttack")] = AnimationTag.JumpAttack;
+        tagDictionary[Animator.StringToHash("run")] = AnimationTag.Run;
 
     }
 

@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
     private bool isHolding = false;
 
     [SerializeField]private bool canAttack = true;//공격을 시도하면 어택박스가 사라지기 전까진 추가적으로 공격불가
-    private bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
+    [SerializeField]private bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
 
     private const int maxAttacks = 4; // 최대 4번 공격 가능
     private float lastAttackTime = 0f; // 마지막 공격 시간 기록
@@ -41,6 +41,8 @@ public class PlayerAttack : MonoBehaviour
     private int animHash_SAttack2 = Animator.StringToHash("isSAttack2");
     private int animHash_SAttack3 = Animator.StringToHash("isSAttack3");
     private int animHash_SAttack4 = Animator.StringToHash("isSAttack4");
+
+    private int animHash_FAttack1 = Animator.StringToHash("isFAttack1");
 
     private BodyTail bodyTail;
 
@@ -95,7 +97,7 @@ public class PlayerAttack : MonoBehaviour
     void HandleInput()// 콤보 공격
     {
         // 마지막 공격을 다 기다리고 현재 애니메이션 상태가 표준 상태이거나 공격중일 때
-        if (waitLastAttack && (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack))
+        if (waitLastAttack && !((playerStat.aniState == AnimationTag.Jump)))// && (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack)
         {
             //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
             if ((Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks))
@@ -132,6 +134,15 @@ public class PlayerAttack : MonoBehaviour
             {
                 isHolding = false;
                 ForceReleaseFire(); // 2초 초과 시 강제 해제
+            }
+        }
+        else if(playerStat.aniState == AnimationTag.Jump)// && (playerStat.aniState == AnimationTag.move || true)
+        {
+            // 반드시 점프하는 애니메이션이어야 하고, 달리기 상태여도 됨
+            if (Input.GetButtonDown("Fire1"))
+            {
+                CharAni.ResetTrigger(animHash_FAttack1);
+                CharAni.SetTrigger(animHash_FAttack1);
             }
         }
 

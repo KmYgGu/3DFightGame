@@ -32,7 +32,7 @@ public class EventManager : MonoBehaviour
     }
     public void TriggerEvent()
     {
-        OnCustomEvent3?.Invoke();  // 이벤트 호출
+        OnCustomEvent3?.Invoke();  // PlayerStat으로 이벤트 호출
     }
 
     //EventManager.Instance.TriggerEvent(index);  // 다른 스크립트에서 사용할 경우,

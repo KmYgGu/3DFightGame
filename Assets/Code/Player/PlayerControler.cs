@@ -43,7 +43,7 @@ public class PlayerControler : MonoBehaviour
 
     private void Update()
     {
-        if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.move || playerStat.aniState == AnimationTag.Jump)
+        if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.Run)
         {
             WalkAndRun();
         }
@@ -63,6 +63,7 @@ public class PlayerControler : MonoBehaviour
             goRun = false;
             playerAnimtor.SetBool(animHash_walk, false);
             playerAnimtor.SetBool(animHash_Run, false);
+
             EventManager.Instance.TriggerEvent();//idle
         }
         else
@@ -89,7 +90,9 @@ public class PlayerControler : MonoBehaviour
         {
             
             playerAnimtor.SetBool(animHash_walk, true);
-            EventManager.Instance.TriggerEvent();//walk
+
+            
+            //EventManager.Instance.TriggerEvent();//walk
 
             CharMoveSpin();
 
@@ -112,10 +115,10 @@ public class PlayerControler : MonoBehaviour
                 // 이전 입력 방향과 같고, 마지막 탭 이후 경과 시간이 임계치 이내면 달리기로 판단
                 if (moveArrow == lastInputDirection && (Time.time - lastTapTime) < doubleTapThreshold)
                 {
-                    Debug.Log("Running!");
+                    //Debug.Log("Running!");
                     playerAnimtor.SetBool(animHash_walk, false);
                     playerAnimtor.SetBool(animHash_Run, true);
-                    EventManager.Instance.TriggerEvent();//Run
+                    //EventManager.Instance.TriggerEvent();//Run
 
 
                     isRunning = true;
@@ -132,6 +135,7 @@ public class PlayerControler : MonoBehaviour
 
                 Vector3 normalizedMove = moveArrow.normalized;
                 controller.Move(normalizedMove * (playermoveSpeed *2* Time.deltaTime));
+                EventManager.Instance.TriggerEvent();//Run
             }
         }
 
