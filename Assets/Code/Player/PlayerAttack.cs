@@ -49,6 +49,8 @@ public class PlayerAttack : MonoBehaviour
 
     // 플레이어 스텟
     private PlayerStat playerStat;
+
+    private LookViewAttack lookView;
     
     [SerializeField]private AnimationClip[] animationClips;
 
@@ -65,6 +67,7 @@ public class PlayerAttack : MonoBehaviour
 
         playerStat = gameObject.GetComponentInParent<PlayerStat>();
         playerJump = gameObject.GetComponentInParent<PlayerJump>();
+        lookView = gameObject.GetComponentInParent<LookViewAttack>();
 
 
     }
@@ -95,6 +98,8 @@ public class PlayerAttack : MonoBehaviour
     {
         // 마지막 공격을 다 기다리고 현재 애니메이션 상태가 표준 상태이거나 공격중일 때
         
+        if(!(playerStat.aniState == AnimationTag.Run))
+        {
             if (waitLastAttack)// && !((playerStat.aniState == AnimationTag.Jump)) // && transform.parent.position.y < 0.01
             {
                 //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
@@ -135,24 +140,10 @@ public class PlayerAttack : MonoBehaviour
                     ForceReleaseFire(); // 2초 초과 시 강제 해제
                 }
             }
-        
-        
-        /*else if(!playerJump.isground)// playerStat.aniState == AnimationTag.Jump //transform.parent.position.y >= 0.01
-        {
-            // 반드시 점프하는 애니메이션이어야 하고, 달리기 상태여도 됨
-            if (Input.GetButtonDown("Fire1"))
-            {
-                //CharAni.ResetTrigger("isAttack1");
-                //CharAni.ResetTrigger("isSAttack1");
-                canAttack = true;
+        }
 
-                //Debug.Log(transform.parent.position.y);
-                CharAni.ResetTrigger(animHash_FAttack1);
-                CharAni.SetTrigger(animHash_FAttack1);
-            }
-        }*/
-
-        
+            
+                
     }
 
     void CheckResetTimer()// 공격 키를 누른 후, 제한 시간 안에 다음 공격을 날리지 않으면 콤보를 초기화
@@ -292,8 +283,8 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_Attack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
-            
 
+        lookView.CheckAndRotateToTarget();// 시야 안에 적이 있으면 적을 향해 캐릭터를 회전
         EventManager.Instance.TriggerEvent();//attack
         //StartCoroutine("GetAnimationTag");
     }
@@ -309,6 +300,8 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_SAttack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
+
+        lookView.CheckAndRotateToTarget();
         EventManager.Instance.TriggerEvent();//attack
     }
 

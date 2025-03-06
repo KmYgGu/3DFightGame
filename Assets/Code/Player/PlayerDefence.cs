@@ -9,6 +9,8 @@ public class PlayerDefence : MonoBehaviour
     private int animHash_Gurad = Animator.StringToHash("isGuard");
     private int animHash_GuradUP = Animator.StringToHash("isGuardUp");
 
+    [SerializeField] private GameObject GuardCol;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,15 +33,26 @@ public class PlayerDefence : MonoBehaviour
         }
         if (Input.GetButtonUp("Fire2"))
         {
+            GuardCol.SetActive(false);//빨리 연타하면 가드가 바로 사라지는 데, 이를 몇번 시도해보고 남아있는 지 여부를 설정
             CharAni.ResetTrigger(animHash_Gurad);
             CharAni.SetTrigger(animHash_GuradUP);
-            //StartCoroutine("GuardToidle");
+            
         }
     }
 
-    IEnumerator GuardToidle()
+    private void StartGuard()// 가드 이벤트 상태 호출
     {
-        yield return new WaitForSeconds(0.26f);
-        //EventManager.Instance.TriggerEvent();// idle 상태를 출력하기 위한 부분
+        Debug.Log("가드 활성화");
+        GuardCol.SetActive(true);
+
     }
+
+    private void EndGuard()// 가드 이벤트 상태 호출
+    {
+        Debug.Log("가드가 풀림");
+        GuardCol.SetActive(false);
+
+    }
+
+
 }

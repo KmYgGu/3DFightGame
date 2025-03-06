@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 캐릭터가 공격을 하는 데, 캐릭터의 공격 방향에 적이 있으면 자동으로 적을 향하는 스크립트
+
+// 이 스크립트는 공격을 할때랑 공격을 받을 때 실행.
 public class LookViewAttack : MonoBehaviour
 {
     [SerializeField]private Transform target;  // 상대 캐릭터의 Transform
@@ -10,15 +12,7 @@ public class LookViewAttack : MonoBehaviour
     private float viewDistance = 1f; // 감지 거리
 
     
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        CheckAndRotateToTarget();
-    }
-
-    void CheckAndRotateToTarget()
+    public void CheckAndRotateToTarget()
     {
         if (target == null) return;
 

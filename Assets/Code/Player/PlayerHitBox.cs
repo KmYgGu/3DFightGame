@@ -24,6 +24,8 @@ public class PlayerHitBox : MonoBehaviour
 
         if (other.CompareTag("PlayerBody")) return;
 
+        if (other.CompareTag("Guard")) return;
+
         if (isInvulnerable) return;
 
         
