@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerJump : MonoBehaviour
 {
     [SerializeField]private bool isGround = true;
+    public bool isground => isGround;
+
     private bool isFalling = false;
     private float acceleration = 13;
 
@@ -67,8 +69,12 @@ public class PlayerJump : MonoBehaviour
 
     IEnumerator Jump()
     {
-
+        isGround = false; // 점프 완료
         //Debug.Log("점프");
+        animator.ResetTrigger("isAttack1");
+        animator.ResetTrigger("isSAttack1");
+
+
         animator.ResetTrigger("isFAttack1");// 점프 공격키 연타하고 착지하고 다시 점프하면, 공격이 나가는 것을 방지
         animator.SetTrigger(animHash_idleJump);
         EventManager.Instance.TriggerEvent();// 점프 했을 때 상태 체크
@@ -93,7 +99,7 @@ public class PlayerJump : MonoBehaviour
         
         transform.position = new Vector3(transform.position.x, jumpPos.y, transform.position.z);
 
-        isGround = false; // 점프 완료
+        //isGround = false; // 점프 완료
 
         yield return null; // 다음 프레임까지 대기
     }
@@ -134,7 +140,7 @@ public class PlayerJump : MonoBehaviour
             animator.SetTrigger(animHash_isGround);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
-            EventManager.Instance.TriggerEvent();// 땅에 닿았을 때 애니메이션 체크
+            //EventManager.Instance.TriggerEvent();// 땅에 닿았을 때 애니메이션 체크
         }
     }
 

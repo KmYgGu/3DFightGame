@@ -26,4 +26,10 @@ public class AnimationTagReader : MonoBehaviour
         return AnimationTag.None;;
     }
 
+    private void idleaniDebug()// idle 이벤트 상태 호출
+    {
+        Debug.Log("idle상태입니다");
+        EventManager.Instance.TriggerEvent();//idle
+    }
+
 }

@@ -38,7 +38,7 @@ public class PlayerHitBox : MonoBehaviour
     {
         isInvulnerable = true; // 무적 상태 활성화
 
-        yield return new WaitForSeconds(0.5f); // 0.5초 동안 공격 무시
+        yield return new WaitForSeconds(0.2f); // 0.5초 동안 공격 무시
 
         //yield return new WaitForEndOfFrame();
         isInvulnerable = false; // 다시 공격 받을 수 있도록 설정

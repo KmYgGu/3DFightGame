@@ -43,7 +43,7 @@ public class PlayerControler : MonoBehaviour
 
     private void Update()
     {
-        if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.Run)
+        if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.Run || playerStat.aniState == AnimationTag.JumpAttack)
         {
             WalkAndRun();
         }
@@ -64,7 +64,7 @@ public class PlayerControler : MonoBehaviour
             playerAnimtor.SetBool(animHash_walk, false);
             playerAnimtor.SetBool(animHash_Run, false);
 
-            EventManager.Instance.TriggerEvent();//idle
+            //EventManager.Instance.TriggerEvent();//idle
         }
         else
         {
@@ -118,7 +118,7 @@ public class PlayerControler : MonoBehaviour
                     //Debug.Log("Running!");
                     playerAnimtor.SetBool(animHash_walk, false);
                     playerAnimtor.SetBool(animHash_Run, true);
-                    //EventManager.Instance.TriggerEvent();//Run
+                    
 
 
                     isRunning = true;
@@ -161,6 +161,7 @@ public class PlayerControler : MonoBehaviour
         //  회전 적용
         transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
         //transform.rotation = Quaternion.Euler(0, currentAngle, 0);
+
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -174,5 +175,7 @@ public class PlayerControler : MonoBehaviour
 
 
     }
+
+    
 
 }

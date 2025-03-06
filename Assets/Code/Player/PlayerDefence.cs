@@ -27,18 +27,19 @@ public class PlayerDefence : MonoBehaviour
         if (Input.GetButton("Fire2"))// S키 버튼
         {
             CharAni.SetTrigger(animHash_Gurad);
+            EventManager.Instance.TriggerEvent();
         }
         if (Input.GetButtonUp("Fire2"))
         {
             CharAni.ResetTrigger(animHash_Gurad);
             CharAni.SetTrigger(animHash_GuradUP);
-            StartCoroutine("GuardToidle");
+            //StartCoroutine("GuardToidle");
         }
     }
 
     IEnumerator GuardToidle()
     {
         yield return new WaitForSeconds(0.26f);
-        EventManager.Instance.TriggerEvent();// idle 상태를 출력하기 위한 부분
+        //EventManager.Instance.TriggerEvent();// idle 상태를 출력하기 위한 부분
     }
 }

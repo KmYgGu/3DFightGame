@@ -45,6 +45,7 @@ public class PlayerAttack : MonoBehaviour
     private int animHash_FAttack1 = Animator.StringToHash("isFAttack1");
 
     private BodyTail bodyTail;
+    private PlayerJump playerJump;
 
     // 플레이어 스텟
     private PlayerStat playerStat;
@@ -63,7 +64,9 @@ public class PlayerAttack : MonoBehaviour
         TryGetComponent<AnimationTagReader>(out tagReader);
 
         playerStat = gameObject.GetComponentInParent<PlayerStat>();
-        
+        playerJump = gameObject.GetComponentInParent<PlayerJump>();
+
+
     }
     
     void Update()
@@ -84,67 +87,70 @@ public class PlayerAttack : MonoBehaviour
     public void changeLastAttack()
     {
         waitLastAttack = true;
-        //EventManager.Instance.TriggerEvent();
-        StartCoroutine("oneFrameLateDo");
+        
+        
     }
-    IEnumerator oneFrameLateDo()
-    {
-        //yield return new WaitForEndOfFrame(); // 한 프레임 대기 후 실행
-        yield return new WaitForSeconds(0.1f);
-        EventManager.Instance.TriggerEvent();
-    }
-
+    
     void HandleInput()// 콤보 공격
     {
         // 마지막 공격을 다 기다리고 현재 애니메이션 상태가 표준 상태이거나 공격중일 때
-        if (waitLastAttack && !((playerStat.aniState == AnimationTag.Jump)))// && (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack)
-        {
-            //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
-            if ((Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks))
+        
+            if (waitLastAttack)// && !((playerStat.aniState == AnimationTag.Jump)) // && transform.parent.position.y < 0.01
             {
+                //공격키를 눌렀을 때, 해당 큐의 길이가 최대 공격가능 수보다 작을 때
+                if ((Input.GetButtonDown("Fire1") && attackStack.Count < maxAttacks))
+                {
 
-                isHolding = true;
-                pressStartTime = Time.time;
+                    isHolding = true;
+                    pressStartTime = Time.time;
 
+                }
+
+                if (Input.GetButtonUp("Fire1") && attackStack.Count < maxAttacks && isHolding)// 
+                {
+                    //Debug.Log(transform.parent.position.y);
+                    float heldDuration = Time.time - pressStartTime;
+
+                    if (canAttack)
+                        attackStack.Push(heldDuration); // 공격 스택에 추가
+
+
+                    lastAttackTime = Time.time; // 마지막 공격 시간 갱신
+
+
+                    ProcessAttackQueue();
+
+                    isHolding = false;
+                }
+
+                /*if (attackStack.Count >= maxAttacks)// 사실상 마지막 키입력 없음이 해주니 없어도 됨
+                {
+                    Debug.Log(" 공격을 최대 횟수만틈 시도함");
+                    ResetAttacks();
+                }*/
+
+                if (Time.time - pressStartTime >= maxHoldTime && isHolding)//isHolding && 
+                {
+                    isHolding = false;
+                    ForceReleaseFire(); // 2초 초과 시 강제 해제
+                }
             }
-
-            if (Input.GetButtonUp("Fire1") && attackStack.Count < maxAttacks && isHolding)// 
-            {
-                float heldDuration = Time.time - pressStartTime;
-
-                if(canAttack)
-                attackStack.Push(heldDuration); // 공격 스택에 추가
-
-
-                lastAttackTime = Time.time; // 마지막 공격 시간 갱신
-
-
-                ProcessAttackQueue();
-
-                isHolding = false;
-            }
-
-            /*if (attackStack.Count >= maxAttacks)// 사실상 마지막 키입력 없음이 해주니 없어도 됨
-            {
-                Debug.Log(" 공격을 최대 횟수만틈 시도함");
-                ResetAttacks();
-            }*/
-
-            if (Time.time - pressStartTime >= maxHoldTime && isHolding)//isHolding && 
-            {
-                isHolding = false;
-                ForceReleaseFire(); // 2초 초과 시 강제 해제
-            }
-        }
-        else if(playerStat.aniState == AnimationTag.Jump)// && (playerStat.aniState == AnimationTag.move || true)
+        
+        
+        /*else if(!playerJump.isground)// playerStat.aniState == AnimationTag.Jump //transform.parent.position.y >= 0.01
         {
             // 반드시 점프하는 애니메이션이어야 하고, 달리기 상태여도 됨
             if (Input.GetButtonDown("Fire1"))
             {
+                //CharAni.ResetTrigger("isAttack1");
+                //CharAni.ResetTrigger("isSAttack1");
+                canAttack = true;
+
+                //Debug.Log(transform.parent.position.y);
                 CharAni.ResetTrigger(animHash_FAttack1);
                 CharAni.SetTrigger(animHash_FAttack1);
             }
-        }
+        }*/
 
         
     }
@@ -187,15 +193,33 @@ public class PlayerAttack : MonoBehaviour
 
     void ProcessAttackQueue()// 몇 번째 공격을 몇 초간 눌렀는지 재생
     {
-        if (attackStack.Count > 0)
+        if (playerJump.isground)
         {
-            
-            int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
-            float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
-            //Debug.Log($"{attackNumber}: {attackTime}");
-             
-            ExecuteAttack(attackTime, attackNumber);
+            if (attackStack.Count > 0)
+            {
+
+                int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
+                float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
+                                                       //Debug.Log($"{attackNumber}: {attackTime}");
+
+                ExecuteAttack(attackTime, attackNumber);
+            }
         }
+        else
+        {
+            //Debug.Log("이 공격은 공중 공격입니다");
+            attackStack.Clear(); // 공격 스택 초기화
+            lastAttackTime = 0f; // 타이머 초기화
+
+            //CharAni.ResetTrigger("isAttack1");
+            //CharAni.ResetTrigger("isSAttack1");
+            canAttack = true;
+
+            //Debug.Log(transform.parent.position.y);
+            CharAni.ResetTrigger(animHash_FAttack1);
+            CharAni.SetTrigger(animHash_FAttack1);
+        }
+        
     }
 
     void ExecuteAttack(float heldDuration, int attackNumber)// 누른 시간에 따라 공격을 분류, 몇 번째 공격인지 따라 번호를 부여
@@ -254,7 +278,7 @@ public class PlayerAttack : MonoBehaviour
         lastAttackTime = 0f; // 타이머 초기화
         Debug.Log("공격 초기화!");
         bodyTail.SetTail(30);
-        EventManager.Instance.TriggerEvent();
+        //EventManager.Instance.TriggerEvent();
     }
 
     void PlayAnimation(int attackNumber)// 공격 번호에 따라 애니메이션을 부여
@@ -270,7 +294,7 @@ public class PlayerAttack : MonoBehaviour
         CharAni.SetTrigger(Aniname);
             
 
-        EventManager.Instance.TriggerEvent();
+        EventManager.Instance.TriggerEvent();//attack
         //StartCoroutine("GetAnimationTag");
     }
 
@@ -285,7 +309,7 @@ public class PlayerAttack : MonoBehaviour
             _ => animHash_SAttack4,// Default;
         };
         CharAni.SetTrigger(Aniname);
-        EventManager.Instance.TriggerEvent();
+        EventManager.Instance.TriggerEvent();//attack
     }
 
     #endregion

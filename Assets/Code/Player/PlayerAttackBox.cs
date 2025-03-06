@@ -52,6 +52,6 @@ public class PlayerAttackBox : MonoBehaviour
         //Debug.Log("마지막 공격끝");
 
         playerAttack.changeLastAttack();
-        playerAttack.changeAttackCan();
+        playerAttack.changeAttackCan();//공격이 가능하게 실행
     }
 }
