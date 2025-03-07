@@ -30,7 +30,7 @@ public class EnemyAttack : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !isAttacking)
-            StartCoroutine("SAttack4");
+            StartCoroutine("Attack1");
 
     }
 

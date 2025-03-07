@@ -45,6 +45,7 @@ public class PlayerControler : MonoBehaviour
     {
         if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.Run || playerStat.aniState == AnimationTag.JumpAttack)
         {
+            if(!(Input.GetButton("Fire2")))
             WalkAndRun();
         }
         

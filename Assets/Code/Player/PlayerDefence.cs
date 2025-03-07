@@ -28,6 +28,13 @@ public class PlayerDefence : MonoBehaviour
 
         if (Input.GetButton("Fire2"))// S키 버튼
         {
+            Vector3 moveArrow = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+            float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Round(newAngle / 45.0f) * 45.0f; // 8방향 스냅
+
+            if(moveArrow != Vector3.zero)
+            transform.parent.rotation = Quaternion.AngleAxis(targetAngle, Vector3.up);
+
             CharAni.SetTrigger(animHash_Gurad);
             EventManager.Instance.TriggerEvent();
         }
@@ -36,7 +43,9 @@ public class PlayerDefence : MonoBehaviour
             GuardCol.SetActive(false);//빨리 연타하면 가드가 바로 사라지는 데, 이를 몇번 시도해보고 남아있는 지 여부를 설정
             CharAni.ResetTrigger(animHash_Gurad);
             CharAni.SetTrigger(animHash_GuradUP);
-            
+
+            CharAni.SetBool("isWalk", false);
+
         }
     }
 
