@@ -20,7 +20,7 @@ public class PlayerAttackBox : MonoBehaviour
     private void aniEnent(int number)// 어택 박스 생기는 이벤트 함수
     {
 
-        attackAni = playerAttack.GetAnimationClip(number);
+        //attackAni = playerAttack.GetAnimationClip(number);
         //Debug.Log(attackAni.name);
 
         attackColl[number].SetActive(true);
@@ -29,7 +29,7 @@ public class PlayerAttackBox : MonoBehaviour
     private void attackcolDisable(int number)// 어택 박스 사라지는
     {
 
-        attackAni = playerAttack.GetAnimationClip(number);
+        //attackAni = playerAttack.GetAnimationClip(number);
         
         attackColl[number].SetActive(false);
 
@@ -38,6 +38,10 @@ public class PlayerAttackBox : MonoBehaviour
             case 3:
             case 7:
                 
+                break;
+
+            case 9:
+                playerAttack.changeLastAttack();
                 break;
             default:
                 playerAttack.changeAttackCan();

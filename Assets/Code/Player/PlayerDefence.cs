@@ -40,18 +40,35 @@ public class PlayerDefence : MonoBehaviour
         }
         if (Input.GetButtonUp("Fire2"))
         {
-            GuardCol.SetActive(false);//빨리 연타하면 가드가 바로 사라지는 데, 이를 몇번 시도해보고 남아있는 지 여부를 설정
+            /*GuardCol.SetActive(false);//빨리 연타하면 가드가 바로 사라지는 데, 이를 몇번 시도해보고 남아있는 지 여부를 설정
             CharAni.ResetTrigger(animHash_Gurad);
             CharAni.SetTrigger(animHash_GuradUP);
 
             CharAni.SetBool("isWalk", false);
+            CharAni.ResetTrigger("isGuardSucess");*/
+
+            StartCoroutine("GuardDisable");
 
         }
     }
 
+    IEnumerator GuardDisable()
+    {
+        StopCoroutine(GuardDisable());
+
+        yield return new WaitForSeconds(0.05f);
+
+        GuardCol.SetActive(false);//빨리 연타하면 가드가 바로 사라지는 데, 이를 몇번 시도해보고 남아있는 지 여부를 설정
+            CharAni.ResetTrigger(animHash_Gurad);
+            CharAni.SetTrigger(animHash_GuradUP);
+
+            CharAni.SetBool("isWalk", false);
+            CharAni.ResetTrigger("isGuardSucess");
+    }
+
     private void StartGuard()// 가드 이벤트 상태 호출
     {
-        Debug.Log("가드 활성화");
+        //Debug.Log("가드 활성화");
         GuardCol.SetActive(true);
 
     }

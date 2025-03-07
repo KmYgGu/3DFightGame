@@ -29,8 +29,20 @@ public class EnemyAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isAttacking)
+        if (Input.GetKeyDown(KeyCode.Keypad1) && !isAttacking)
             StartCoroutine("Attack1");
+
+        if (Input.GetKeyDown(KeyCode.Keypad2) && !isAttacking)
+            StartCoroutine("Attack2");
+
+        if (Input.GetKeyDown(KeyCode.Keypad3) && !isAttacking)
+            StartCoroutine("Attack3");
+
+        if (Input.GetKeyDown(KeyCode.Keypad4) && !isAttacking)
+            StartCoroutine("Attack4");
+
+        if (Input.GetKeyDown(KeyCode.Keypad5) && !isAttacking)
+            StartCoroutine("SAttack4");
 
     }
 

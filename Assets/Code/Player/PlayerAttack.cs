@@ -43,6 +43,7 @@ public class PlayerAttack : MonoBehaviour
     private int animHash_SAttack4 = Animator.StringToHash("isSAttack4");
 
     private int animHash_FAttack1 = Animator.StringToHash("isFAttack1");
+    private int animHash_CAttack1 = Animator.StringToHash("isCAttack");
 
     private BodyTail bodyTail;
     private PlayerJump playerJump;
@@ -186,15 +187,33 @@ public class PlayerAttack : MonoBehaviour
     {
         if (playerJump.isground)
         {
-            if (attackStack.Count > 0)
+            if(playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack)
             {
+                if (attackStack.Count > 0)
+                {
 
-                int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
-                float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
-                                                       //Debug.Log($"{attackNumber}: {attackTime}");
+                    int attackNumber = attackStack.Count; // 현재 몇 번째 공격인지
+                    float attackTime = attackStack.Peek(); // 마지막의 공격 데이터 가져오기
+                                                           //Debug.Log($"{attackNumber}: {attackTime}");
 
-                ExecuteAttack(attackTime, attackNumber);
+                    ExecuteAttack(attackTime, attackNumber);
+                }
             }
+            else if (playerStat.aniState == AnimationTag.GuardSucess)// 반격
+            {
+                attackStack.Clear(); // 공격 스택 초기화
+                lastAttackTime = 0f; // 타이머 초기화
+
+                //CharAni.ResetTrigger("isAttack1");
+                //CharAni.ResetTrigger("isSAttack1");
+                waitLastAttack = false;
+
+                //Debug.Log(transform.parent.position.y);
+                CharAni.ResetTrigger(animHash_CAttack1);
+                CharAni.SetTrigger(animHash_CAttack1);
+            }
+
+            
         }
         else
         {

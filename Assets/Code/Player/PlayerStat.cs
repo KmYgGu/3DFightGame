@@ -16,6 +16,9 @@ public class PlayerStat : MonoBehaviour
 
     private AnimationTagReader tagReader;
 
+    // 충돌한 오브젝트(공격)를 저장할 HashSet
+    public HashSet<GameObject> collidedObjects = new HashSet<GameObject>();
+
     private void Start()
     {
         tagReader = gameObject.GetComponentInChildren<AnimationTagReader>();
@@ -58,4 +61,6 @@ public class PlayerStat : MonoBehaviour
         //Debug.Log("플레이어 현재 애니메이션 태그: " + AniState);
 
     }
+
+
 }
