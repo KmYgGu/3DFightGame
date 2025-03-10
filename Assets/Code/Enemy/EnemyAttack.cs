@@ -33,10 +33,10 @@ public class EnemyAttack : MonoBehaviour
             StartCoroutine("Attack1");
 
         if (Input.GetKeyDown(KeyCode.Keypad2) && !isAttacking)
-            StartCoroutine("Attack2");
+            StartCoroutine("SAttack2");
 
         if (Input.GetKeyDown(KeyCode.Keypad3) && !isAttacking)
-            StartCoroutine("Attack3");
+            StartCoroutine("SAttack3");
 
         if (Input.GetKeyDown(KeyCode.Keypad4) && !isAttacking)
             StartCoroutine("Attack4");

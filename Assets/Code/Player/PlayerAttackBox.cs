@@ -4,58 +4,67 @@ using UnityEngine;
 
 public class PlayerAttackBox : MonoBehaviour
 {
-    private PlayerAttack playerAttack;
-    [SerializeField]private AnimationClip attackAni;
+    [SerializeField] private GameObject EnemyHitbox; // 플레이어 히트박스들의 부모 
+    private Transform EnemyHitboxTransform;
+    private EnemyHitBox EnemyHitBox;
 
-    [SerializeField] private GameObject[] attackColl;
+    [SerializeField] private GameObject EnemyCharCon;// 플레이어 캐릭터 컨트롤러
 
-    // Start is called before the first frame update
+    //private bool isAttack = false;// 나중에 이건 공격을 선언할 때마다 초기화 되도록
+
+    public delegate void EnemyDamaged(PlayerAttackBox PlayerHB);
+    public static event EnemyDamaged EnemyDam;
+
+    [SerializeField] private PlayerStat playerStat;
+
     void Start()
     {
-        TryGetComponent<PlayerAttack>(out playerAttack); // 같은 오브젝트에 있는 스크립트 가져오기
-              
-    }
-        
 
-    private void aniEnent(int number)// 어택 박스 생기는 이벤트 함수
-    {
-
-        //attackAni = playerAttack.GetAnimationClip(number);
-        //Debug.Log(attackAni.name);
-
-        attackColl[number].SetActive(true);
+        EnemyHitBox = EnemyHitbox.GetComponent<EnemyHitBox>();
+        EnemyHitboxTransform = EnemyHitbox.transform;
     }
 
-    private void attackcolDisable(int number)// 어택 박스 사라지는
+    
+    private void OnTriggerEnter(Collider other)
     {
 
-        //attackAni = playerAttack.GetAnimationClip(number);
-        
-        attackColl[number].SetActive(false);
 
-        switch (number)//마지막 공격동작이 아닌 경우에만 다음 공격으로 빠르게 공격할 수 있음
+        if (other.CompareTag("Ground")) return;
+
+        if (other.CompareTag("PlayerBody")) return;
+
+        if (other.gameObject == EnemyCharCon) return;
+
+        // 이미 충돌했던 오브젝트라면 무시
+        //if (collidedObjects.Contains(other.gameObject)) return;
+        //collidedObjects.Add(other.gameObject);
+
+        if (!playerStat.isattack)
         {
-            case 3:
-            case 7:
-                
-                break;
+            playerStat.ChangeisAttacktrue();
 
-            case 9:
-                playerAttack.changeLastAttack();
-                break;
-            default:
-                playerAttack.changeAttackCan();
-                break;
+            if (other.CompareTag("Guard"))
+            {
+
+
+                EnemyHitBox.Defence();
+
+            }
+            if (other.gameObject.transform.IsChildOf(EnemyHitboxTransform) && (!other.CompareTag("Guard")))
+            {
+
+                //EnemyHitBox.HitAniDamage();
+
+                //Debug.Log(other.gameObject.name);
+
+                EnemyDam?.Invoke(this);
+            }
+
+
+
         }
-             
-        
+
+
     }
 
-    private void LastAttackDelay()//마지막 공격은 애니메이션이 다 끝나야 공격이 가능
-    {
-        //Debug.Log("마지막 공격끝");
-
-        playerAttack.changeLastAttack();
-        playerAttack.changeAttackCan();//공격이 가능하게 실행
-    }
 }

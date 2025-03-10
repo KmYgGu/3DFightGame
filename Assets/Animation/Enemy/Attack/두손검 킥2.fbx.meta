@@ -64,7 +64,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 7
         messageOptions: 0
-      - time: 0.4185185
+      - time: 0.4332244
         functionName: attackcolDisable
         data: 
         objectReferenceParameter: {instanceID: 0}

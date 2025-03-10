@@ -17,6 +17,9 @@ public enum AnimationTag
     CounterAttack = 9,
     sDamage = 10,
     mDamage = 11,
+    Air = 12,
+    Down = 13,
+    Stand = 14,
 }
 public class AnimationTagManager : MonoBehaviour
 {
@@ -56,6 +59,9 @@ public class AnimationTagManager : MonoBehaviour
         tagDictionary[Animator.StringToHash("CounterAttack")] = AnimationTag.CounterAttack;
         tagDictionary[Animator.StringToHash("sDamage")] = AnimationTag.sDamage;
         tagDictionary[Animator.StringToHash("mDamage")] = AnimationTag.mDamage;
+        tagDictionary[Animator.StringToHash("Air")] = AnimationTag.Air;
+        tagDictionary[Animator.StringToHash("Down")] = AnimationTag.Down;
+        tagDictionary[Animator.StringToHash("Stand")] = AnimationTag.Stand;
 
 
     }

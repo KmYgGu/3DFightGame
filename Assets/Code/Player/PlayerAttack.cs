@@ -185,6 +185,7 @@ public class PlayerAttack : MonoBehaviour
 
     void ProcessAttackQueue()// 몇 번째 공격을 몇 초간 눌렀는지 재생
     {
+        playerStat.ChangeisAttackfalse();
         if (playerJump.isground)
         {
             if(playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack)

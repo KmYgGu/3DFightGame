@@ -5,10 +5,30 @@ using UnityEngine;
 public class EnemyAniEvent : MonoBehaviour
 {
     [SerializeField] private GameObject[] attackColl;
-    
+
+    [SerializeField] private EnemyStat enemyStat;
+
+    private void OnEnable()
+    {
+        PlayerAttackBox.EnemyDam += AttackCoiReset;
+    }
+
+    private void OnDisable()
+    {
+        PlayerAttackBox.EnemyDam -= AttackCoiReset;
+    }
+
+    void AttackCoiReset(PlayerAttackBox EnemyDam)// 만약 데미지를 입었을 경우, 바로 공격판정들을 끄기
+    {
+        foreach (GameObject obj in attackColl)
+        {
+            obj.SetActive(false);
+        }
+    }
 
     private void attackcolEnable(int number)// 어택 박스 생기는 이벤트 함수
     {
+        //enemyStat.ChangeisAttackfalse(); // 공격박스가 생성될 때가 아닌 공격을 시작하자마자 바꾸는 걸로 해줘야됨
         switch (number)//칼 공격이 아닌 경우에만 특정 판정 활성화
         {
             case 7:
