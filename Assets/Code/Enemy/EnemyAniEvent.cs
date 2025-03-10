@@ -31,6 +31,14 @@ public class EnemyAniEvent : MonoBehaviour
         //enemyStat.ChangeisAttackfalse(); // 공격박스가 생성될 때가 아닌 공격을 시작하자마자 바꾸는 걸로 해줘야됨
         switch (number)//칼 공격이 아닌 경우에만 특정 판정 활성화
         {
+            case 5:
+                enemyStat.ChangeisAttackfalse();
+                attackColl[0].SetActive(true);
+                break;
+            case 6:
+                enemyStat.ChangeisAttackfalse();
+                attackColl[0].SetActive(true);
+                break;
             case 7:
                 attackColl[1].SetActive(true);
                 break;

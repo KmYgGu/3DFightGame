@@ -183,12 +183,15 @@ public class PlayerAttack : MonoBehaviour
         }*/
     }
 
+    List<AnimationTag> attacktypes = new List<AnimationTag> { AnimationTag.Attack1, AnimationTag.Attack2, AnimationTag.Attack3, AnimationTag.Attack4, AnimationTag.Attack5,
+                                                                AnimationTag.Attack6, AnimationTag.Attack7,AnimationTag.Attack8};
+
     void ProcessAttackQueue()// 몇 번째 공격을 몇 초간 눌렀는지 재생
     {
         playerStat.ChangeisAttackfalse();
         if (playerJump.isground)
         {
-            if(playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.Attack)
+            if(playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Idle || attacktypes.Contains(playerStat.aniState)) //playerStat.aniState == AnimationTag.Attack
             {
                 if (attackStack.Count > 0)
                 {
@@ -212,6 +215,7 @@ public class PlayerAttack : MonoBehaviour
                 //Debug.Log(transform.parent.position.y);
                 CharAni.ResetTrigger(animHash_CAttack1);
                 CharAni.SetTrigger(animHash_CAttack1);
+                EventManager.Instance.TriggerEvent();//counterAttack
             }
 
             
@@ -225,10 +229,10 @@ public class PlayerAttack : MonoBehaviour
             //CharAni.ResetTrigger("isAttack1");
             //CharAni.ResetTrigger("isSAttack1");
             canAttack = true;
-
-            //Debug.Log(transform.parent.position.y);
+                        
             CharAni.ResetTrigger(animHash_FAttack1);
             CharAni.SetTrigger(animHash_FAttack1);
+            EventManager.Instance.TriggerEvent();//jumpAttack
         }
         
     }

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
 public enum AnimationTag
 {
     None = 0,
     Idle = 1,
     walk = 2,
     Jump = 3,
-    Attack = 4,
+    //Attack = 4,
     Guard = 5,
     JumpAttack = 6,
     Run = 7,
@@ -20,7 +21,16 @@ public enum AnimationTag
     Air = 12,
     Down = 13,
     Stand = 14,
+    Attack1 = 15,
+    Attack2 = 16,
+    Attack3 = 17,
+    Attack4 = 18,
+    Attack5 = 19,
+    Attack6 = 20,
+    Attack7 = 21,
+    Attack8 = 22,
 }
+
 public class AnimationTagManager : MonoBehaviour
 {
     
@@ -51,7 +61,7 @@ public class AnimationTagManager : MonoBehaviour
         tagDictionary[Animator.StringToHash("Idle")] = AnimationTag.Idle;
         tagDictionary[Animator.StringToHash("walk")] = AnimationTag.walk;
         tagDictionary[Animator.StringToHash("Jump")] = AnimationTag.Jump;
-        tagDictionary[Animator.StringToHash("Attack")] = AnimationTag.Attack;
+        //tagDictionary[Animator.StringToHash("Attack")] = AnimationTag.Attack;
         tagDictionary[Animator.StringToHash("Guard")] = AnimationTag.Guard;
         tagDictionary[Animator.StringToHash("JumpAttack")] = AnimationTag.JumpAttack;
         tagDictionary[Animator.StringToHash("run")] = AnimationTag.Run;
@@ -62,6 +72,14 @@ public class AnimationTagManager : MonoBehaviour
         tagDictionary[Animator.StringToHash("Air")] = AnimationTag.Air;
         tagDictionary[Animator.StringToHash("Down")] = AnimationTag.Down;
         tagDictionary[Animator.StringToHash("Stand")] = AnimationTag.Stand;
+        tagDictionary[Animator.StringToHash("Attack1")] = AnimationTag.Attack1;
+        tagDictionary[Animator.StringToHash("Attack2")] = AnimationTag.Attack2;
+        tagDictionary[Animator.StringToHash("Attack3")] = AnimationTag.Attack3;
+        tagDictionary[Animator.StringToHash("Attack4")] = AnimationTag.Attack4;
+        tagDictionary[Animator.StringToHash("Attack5")] = AnimationTag.Attack5;
+        tagDictionary[Animator.StringToHash("Attack6")] = AnimationTag.Attack6;
+        tagDictionary[Animator.StringToHash("Attack7")] = AnimationTag.Attack7;
+        tagDictionary[Animator.StringToHash("Attack8")] = AnimationTag.Attack8;
 
 
     }

@@ -11,6 +11,7 @@ public class EnemyAttackBox : MonoBehaviour
     private PlayerHitBox playerHitBox;
 
     [SerializeField] private GameObject playerCharCon;// 플레이어 캐릭터 컨트롤러
+    [SerializeField] private GameObject EnemyCharCon;// 플레이어 캐릭터 컨트롤러
 
     //private bool isAttack = false;// 나중에 이건 공격을 선언할 때마다 초기화 되도록
 
@@ -38,12 +39,15 @@ public class EnemyAttackBox : MonoBehaviour
 
         if (other.gameObject == playerCharCon) return;
 
+        if (other.gameObject == EnemyCharCon) return;
+
 
         if (!enemyStat.isattack)
         {
             //isAttack = true;
             enemyStat.ChangeisAttacktrue();
 
+            Debug.Log(other.gameObject.name);
             if (other.CompareTag("Guard"))
             {
                 

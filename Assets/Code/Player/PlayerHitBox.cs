@@ -14,7 +14,9 @@ public class PlayerHitBox : MonoBehaviour
     private int animHash_Damage4 = Animator.StringToHash("DamageF");
 
     private int animHash_Guard = Animator.StringToHash("isGuardSucess");
-          
+
+    [SerializeField] private EnemyStat enemyStat;
+
 
     private void Start()
     {
@@ -33,10 +35,21 @@ public class PlayerHitBox : MonoBehaviour
 
     void DamageAniPlay(EnemyAttackBox PlayerDam)
     {
-        //Debug.Log(gameObject.name);
-        animator.SetTrigger(animHash_Damage1);
-        EventManager.Instance.TriggerEvent();//Damage
+        switch (enemyStat.aniState)
+        {
+
+            case AnimationTag.Guard:
+                break;
+            default:
+                animator.SetTrigger(animHash_Damage1);
+                EventManager.Instance.TriggerEvent();//Damage
+                Debug.Log($"현재 공격한 적의 애니메이션은 {enemyStat.aniState}");
+                break;
+
+        }
+
     }
+    
 
     private void OnTriggerEnter(Collider other)// 플레이어 몸의 콜라이더가 겹쳐서 충돌되지 않게 방지
     {
@@ -51,7 +64,7 @@ public class PlayerHitBox : MonoBehaviour
 
         if (PlayerDefenceBox.isDenfence)
         {
-            Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
+            //Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
             return;
         }
         

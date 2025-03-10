@@ -31,22 +31,36 @@ public class EnemyStat : MonoBehaviour
     public delegate void EnemyHpChanged();
     public event EnemyHpChanged EnemyHpCha;
 
-    private int EnemyAttackPower = 10;
+    private int EnemyAttackPower = 50;
     public int enemyAttackPower => EnemyAttackPower;
 
     private AnimationTagReader tagReader;
 
-    [SerializeField]private bool isAttack = false;
+    [SerializeField] private PlayerStat playerStat;
 
-    public bool isattack => isAttack;
+    [SerializeField]private bool IsAttack = false;
+
+    //public bool isattack => IsAttack;
+    public bool isattack
+    {
+        get => IsAttack;
+        set
+        {
+
+            IsAttack = value;
+                      
+
+        }
+
+    }
 
     public void ChangeisAttacktrue()
     {
-        isAttack = true;
+        isattack = true;
     }
     public void ChangeisAttackfalse()
     {
-        isAttack = false;
+        isattack = false;
     }
 
     // 충돌한 오브젝트(공격)를 저장할 HashSet
@@ -59,6 +73,14 @@ public class EnemyStat : MonoBehaviour
         AniState = AnimationTag.Idle; // 처음에는 idle값으로 초기화
 
     }
+
+    /*private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangeisAttackfalse();
+        }
+    }*/
 
     private void OnEnable()
     {
@@ -92,13 +114,51 @@ public class EnemyStat : MonoBehaviour
 
         tagReader.GetCurrentAnimationTag();
 
-        //Debug.Log("플레이어 현재 애니메이션 태그: " + AniState);
+        
 
     }
 
-    private void HpDamage(PlayerAttackBox EnemyDam)
+    private void HpDamage(PlayerAttackBox EnemyDam)//공격에 따라 데미지 입음
     {
-        //EnemyHp -= 100;
-        enemyHp -= 100;
+        switch (playerStat.aniState)
+        {
+            case AnimationTag.Attack1:
+                enemyHp -= playerStat.playerAttackPower; //10
+                break;
+            case AnimationTag.Attack2:
+                enemyHp -= playerStat.playerAttackPower +2;
+                break;
+            case AnimationTag.Attack3:
+                enemyHp -= playerStat.playerAttackPower + 5;
+                break;
+            case AnimationTag.Attack4:
+                enemyHp -= playerStat.playerAttackPower * 2;
+                break;
+            case AnimationTag.Attack5:
+                enemyHp -= playerStat.playerAttackPower;
+                break;
+            case AnimationTag.Attack6:
+                enemyHp -= playerStat.playerAttackPower + 2;
+                break;
+            case AnimationTag.Attack7:
+                enemyHp -= playerStat.playerAttackPower;
+                break;
+            case AnimationTag.Attack8:
+                enemyHp -= playerStat.playerAttackPower *3;
+                break;
+            case AnimationTag.JumpAttack:
+                enemyHp -= playerStat.playerAttackPower;
+                break;
+            case AnimationTag.CounterAttack:
+                enemyHp -= playerStat.playerAttackPower;
+                break;
+            default:
+                Debug.Log("EnemyStatcs. 공격상태가 맞는지 확인");
+                break;
+
+        }
+
+        
+        //enemyHp -= 100;
     }
 }

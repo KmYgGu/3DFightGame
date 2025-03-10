@@ -60,17 +60,15 @@ public class EnemyHitBox : MonoBehaviour
                 break;
             default:
                 animator.SetTrigger(animHash_Damage1);
-                EventManager.Instance.EnemyaniEvent();
-                //Debug.Log(playerStat.aniState);
+                EventManager.Instance.EnemyaniEvent();//Damage1
+                Debug.Log($"현재 공격한 플레이어의 애니메이션은 {playerStat.aniState}");
                 break;
 
         }
-        //animator.SetTrigger(animHash_Damage1);
 
-        //EventManager.Instance.TriggerEvent();//Damage
     }
 
-    public void HitAniDamage()
+    public void HitAniDamage()//안씀
     {
         
         switch (playerStat.aniState)
@@ -80,14 +78,13 @@ public class EnemyHitBox : MonoBehaviour
             break;
             default :
                 animator.SetTrigger(animHash_Damage1);
-                Debug.Log(playerStat.aniState);
+                //Debug.Log(playerStat.aniState);
                 break;
 
         }
+       
         
-        
-        //animator.SetTrigger(animHash_Damage1);
-        //EventManager.Instance.TriggerEvent();//Damage
+  
     }
 
     public void Defence()

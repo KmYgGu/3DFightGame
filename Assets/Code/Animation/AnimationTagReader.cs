@@ -37,4 +37,12 @@ public class AnimationTagReader : MonoBehaviour
         
     }
 
+    private void EnemyidleaniDebug()// idle 이벤트 상태 호출
+    {
+        
+        EventManager.Instance.EnemyaniEvent();//Enemyidle
+
+
+    }
+
 }

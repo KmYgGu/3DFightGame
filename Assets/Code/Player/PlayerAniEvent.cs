@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAniEvent : MonoBehaviour
@@ -70,5 +71,10 @@ public class PlayerAniEvent : MonoBehaviour
 
         playerAttack.changeLastAttack();
         playerAttack.changeAttackCan();//공격이 가능하게 실행
+    }
+
+    public void isGroundjumpAttackCoi()//땅에 닿았으면 즉시 점프 공격판정을 꺼지게 하기
+    {
+        attackColl[8].SetActive(false);
     }
 }

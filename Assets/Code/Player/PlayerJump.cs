@@ -17,6 +17,7 @@ public class PlayerJump : MonoBehaviour
 
     private CharacterController controller;
     private PlayerStat playerStat;
+    private PlayerAniEvent playerAniEvent;
 
     private void Update()
     {
@@ -28,6 +29,7 @@ public class PlayerJump : MonoBehaviour
     {
         TryGetComponent<CharacterController>(out controller);
         animator = GetComponentInChildren<Animator>();//캐릭터 컨트롤러 위치에 놓음
+        playerAniEvent = GetComponentInChildren<PlayerAniEvent>();
 
         TryGetComponent<PlayerStat>(out playerStat);
         //TryGetComponent<Animator>(out animator);
@@ -35,7 +37,8 @@ public class PlayerJump : MonoBehaviour
         
     }
 
-
+    List<AnimationTag> attacktypes = new List<AnimationTag> { AnimationTag.Attack1, AnimationTag.Attack2, AnimationTag.Attack3, AnimationTag.Attack4, AnimationTag.Attack5,
+                                                                AnimationTag.Attack6, AnimationTag.Attack7,AnimationTag.Attack8};
 
 
     IEnumerator FallJump()
@@ -46,7 +49,7 @@ public class PlayerJump : MonoBehaviour
             if (isGround)
             {
                 //공격중이 아닐때
-                if (Input.GetButtonUp("Fire3") && isGround&& !(playerStat.aniState == AnimationTag.Attack))
+                if (Input.GetButtonUp("Fire3") && isGround && !(attacktypes.Contains(playerStat.aniState)))//&& !(playerStat.aniState == AnimationTag.Attack)
                 {
                     isGround = false;
                     
@@ -78,6 +81,7 @@ public class PlayerJump : MonoBehaviour
         animator.ResetTrigger("isFAttack1");// 점프 공격키 연타하고 착지하고 다시 점프하면, 공격이 나가는 것을 방지
         animator.SetTrigger(animHash_idleJump);
         EventManager.Instance.TriggerEvent();// 점프 했을 때 상태 체크
+        
 
         Vector3 startPos = transform.position;
         Vector3 jumpPos = transform.position + new Vector3(0, 1, 0);
@@ -96,6 +100,7 @@ public class PlayerJump : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null; // 다음 프레임까지 대기
         }
+
         
         transform.position = new Vector3(transform.position.x, jumpPos.y, transform.position.z);
 
@@ -139,6 +144,9 @@ public class PlayerJump : MonoBehaviour
             isGround = true;
             animator.SetTrigger(animHash_isGround);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
+            playerAniEvent.isGroundjumpAttackCoi();
+
 
             //EventManager.Instance.TriggerEvent();// 땅에 닿았을 때 애니메이션 체크
         }

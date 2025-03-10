@@ -6,6 +6,8 @@ public class EnemyAttack : MonoBehaviour
 {
     // 적은 플레이어가 공격을 맞았는 지, 막았는 지에 따라 공격 콤보가 달라지게 변경
 
+    private EnemyStat enemyStat;
+
     private Animator animator;
     private int animHash_Attack1 = Animator.StringToHash("isAttack1");
     private int animHash_Attack2 = Animator.StringToHash("isAttack2");
@@ -23,6 +25,7 @@ public class EnemyAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        enemyStat =GetComponentInParent<EnemyStat>();
         TryGetComponent<Animator>(out animator);
     }
 
@@ -30,37 +33,60 @@ public class EnemyAttack : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Keypad1) && !isAttacking)
+        {
+            enemyStat.ChangeisAttackfalse();
             StartCoroutine("Attack1");
+            
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.Keypad2) && !isAttacking)
+        {
+            enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack2");
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.Keypad3) && !isAttacking)
+        {
+            enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack3");
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.Keypad4) && !isAttacking)
+        {
+            enemyStat.ChangeisAttackfalse();
             StartCoroutine("Attack4");
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.Keypad5) && !isAttacking)
+        {
+            enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack4");
+        }
+            
 
     }
 
-    IEnumerator Attack1()// 두손검 킥
+    IEnumerator Attack1()// 한 손 슬래쉬
     {
         isAttacking = true;
 
         animator.SetTrigger(animHash_Attack1);
+        EventManager.Instance.EnemyaniEvent();//Attack1
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
     }
 
-    IEnumerator Attack2()// 한 손 슬래쉬
+    IEnumerator Attack2()// 반 자른 두손검
     {
         isAttacking = true;
 
         animator.SetTrigger(animHash_Attack2);
+        EventManager.Instance.EnemyaniEvent();//Attack2
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -71,6 +97,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_Attack3);
+        EventManager.Instance.EnemyaniEvent();//Attack3
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -81,6 +108,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_Attack4);
+        EventManager.Instance.EnemyaniEvent();//Attack4
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -91,6 +119,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack1);
+        EventManager.Instance.EnemyaniEvent();//Attack5
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -101,6 +130,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack2);
+        EventManager.Instance.EnemyaniEvent();//Attack6
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -111,6 +141,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack3);
+        EventManager.Instance.EnemyaniEvent();//Attack7
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;
@@ -121,6 +152,7 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack4);
+        EventManager.Instance.EnemyaniEvent();//Attack8
 
         yield return new WaitForEndOfFrame();
         isAttacking = false;

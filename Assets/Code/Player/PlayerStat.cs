@@ -31,12 +31,14 @@ public class PlayerStat : MonoBehaviour
     public delegate void PlayerHpChanged();
     public event PlayerHpChanged PlayerHpCha;
 
-    private int PlayerAttackPower = 10;
+    private int PlayerAttackPower = 50;
     public int playerAttackPower => PlayerAttackPower;
 
     private AnimationTagReader tagReader;
 
-    // 충돌한 오브젝트(공격)를 저장할 HashSet
+    [SerializeField] private EnemyStat enemyStat;
+
+    
     [SerializeField] private bool isAttack = false;
 
     public bool isattack => isAttack;
@@ -94,8 +96,45 @@ public class PlayerStat : MonoBehaviour
 
     private void HpDamage(EnemyAttackBox PlayerDam)
     {
-        //PlayerHp -= 100;
-        playerHp -= 100;
+        switch (enemyStat.aniState)
+        {
+            case AnimationTag.Attack1:
+                playerHp -= enemyStat.enemyAttackPower; //10
+                break;
+            case AnimationTag.Attack2:
+                playerHp -= enemyStat.enemyAttackPower + 2;
+                break;
+            case AnimationTag.Attack3:
+                playerHp -= enemyStat.enemyAttackPower + 5;
+                break;
+            case AnimationTag.Attack4:
+                playerHp -= enemyStat.enemyAttackPower * 2;
+                break;
+            case AnimationTag.Attack5:
+                playerHp -= enemyStat.enemyAttackPower;
+                break;
+            case AnimationTag.Attack6:
+                playerHp -= enemyStat.enemyAttackPower + 2;
+                break;
+            case AnimationTag.Attack7:
+                playerHp -= enemyStat.enemyAttackPower;
+                break;
+            case AnimationTag.Attack8:
+                playerHp -= enemyStat.enemyAttackPower * 3;
+                break;
+            case AnimationTag.JumpAttack:
+                playerHp -= enemyStat.enemyAttackPower;
+                break;
+            case AnimationTag.CounterAttack:
+                playerHp -= enemyStat.enemyAttackPower;
+                break;
+            default:
+                Debug.Log("EnemyStatcs. 공격상태가 맞는지 확인");
+                break;
+
+        }
+
+        //playerHp -= 100;
     }
 
 }

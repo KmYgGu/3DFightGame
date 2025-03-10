@@ -8,9 +8,10 @@ public class PlayerAttackBox : MonoBehaviour
     private Transform EnemyHitboxTransform;
     private EnemyHitBox EnemyHitBox;
 
+    [SerializeField] private GameObject playerCharCon;// 플레이어 캐릭터 컨트롤러
     [SerializeField] private GameObject EnemyCharCon;// 플레이어 캐릭터 컨트롤러
 
-    //private bool isAttack = false;// 나중에 이건 공격을 선언할 때마다 초기화 되도록
+    
 
     public delegate void EnemyDamaged(PlayerAttackBox PlayerHB);
     public static event EnemyDamaged EnemyDam;
@@ -35,9 +36,9 @@ public class PlayerAttackBox : MonoBehaviour
 
         if (other.gameObject == EnemyCharCon) return;
 
-        // 이미 충돌했던 오브젝트라면 무시
-        //if (collidedObjects.Contains(other.gameObject)) return;
-        //collidedObjects.Add(other.gameObject);
+        if (other.gameObject == playerCharCon) return;
+
+
 
         if (!playerStat.isattack)
         {
@@ -55,7 +56,7 @@ public class PlayerAttackBox : MonoBehaviour
 
                 //EnemyHitBox.HitAniDamage();
 
-                //Debug.Log(other.gameObject.name);
+                
 
                 EnemyDam?.Invoke(this);
             }
