@@ -13,14 +13,20 @@ public class PlayerHitBox : MonoBehaviour
     private int animHash_Damage2 = Animator.StringToHash("DamageM");
     private int animHash_Damage4 = Animator.StringToHash("DamageF");
 
+    private int animHash_walk = Animator.StringToHash("isWalk");
+    private int animHash_Run = Animator.StringToHash("isRun");
+
     private int animHash_Guard = Animator.StringToHash("isGuardSucess");
 
     [SerializeField] private EnemyStat enemyStat;
+
+    private ParticleSystem ps;
 
 
     private void Start()
     {
         animator = GetComponentInParent<Animator>();
+        ps = GetComponentInChildren<ParticleSystem>();
         
     }
     private void OnEnable()
@@ -41,7 +47,12 @@ public class PlayerHitBox : MonoBehaviour
             case AnimationTag.Guard:
                 break;
             default:
+                animator.SetBool(animHash_walk, false);
+                animator.SetBool(animHash_Run, false);
+
+
                 animator.SetTrigger(animHash_Damage1);
+
                 EventManager.Instance.TriggerEvent();//Damage
                 Debug.Log($"현재 공격한 적의 애니메이션은 {enemyStat.aniState}");
                 break;
@@ -64,18 +75,24 @@ public class PlayerHitBox : MonoBehaviour
 
         if (PlayerDefenceBox.isDenfence)
         {
-            //Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
+            Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
             return;
         }
-        
+        //else
+        //{
+        //    Debug.Log("몸이 맞음");
+        //}
+
         //Debug.Log(other.gameObject.name);
-               
+
     }
+    
 
 
     public void Defence()
     {
         animator.SetTrigger(animHash_Guard);
+        ps.Play();
         Debug.Log("방어성공");  
     }
 

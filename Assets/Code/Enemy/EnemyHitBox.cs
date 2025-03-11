@@ -14,7 +14,7 @@ public class EnemyHitBox : MonoBehaviour
 
     [SerializeField] private PlayerStat playerStat;
 
-    //private int animHash_Guard = Animator.StringToHash("isGuardSucess");
+    private int animHash_Guard = Animator.StringToHash("isGuardSucess");
     
     private void OnEnable()
     {
@@ -60,6 +60,7 @@ public class EnemyHitBox : MonoBehaviour
                 break;
             default:
                 animator.SetTrigger(animHash_Damage1);
+
                 EventManager.Instance.EnemyaniEvent();//Damage1
                 Debug.Log($"현재 공격한 플레이어의 애니메이션은 {playerStat.aniState}");
                 break;
@@ -89,7 +90,7 @@ public class EnemyHitBox : MonoBehaviour
 
     public void Defence()
     {
-        //animator.SetTrigger(animHash_Guard); // 아직 상대방은 방어 모션이 없음
+        animator.SetTrigger(animHash_Guard); // 아직 상대방은 방어 모션이 없음
         //Debug.Log("방어성공");
     }
 }

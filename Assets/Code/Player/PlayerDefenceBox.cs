@@ -21,5 +21,11 @@ public class PlayerDefenceBox : MonoBehaviour
             isDenfence = true; // 방패가 충돌했음을 표시
             //Debug.Log("방패가 먼저 충돌!");
         }
+        
+    }
+
+    private void OnDisable()
+    {
+        isDenfence = false;
     }
 }

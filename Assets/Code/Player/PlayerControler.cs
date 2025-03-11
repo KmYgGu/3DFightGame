@@ -51,6 +51,7 @@ public class PlayerControler : MonoBehaviour
         
 
     }
+    List<AnimationTag> Damagetypes = new List<AnimationTag> { AnimationTag.sDamage, AnimationTag.mDamage, AnimationTag.Air};
 
     void WalkAndRun()
     {
@@ -90,10 +91,11 @@ public class PlayerControler : MonoBehaviour
         if (moveArrow.x != 0 || moveArrow.z != 0)
         {
             
+            //if(!(Damagetypes.Contains(playerStat.aniState))) // 이동하면서 데미지를 받으면 idle로 돌아오질 않음
             playerAnimtor.SetBool(animHash_walk, true);
 
             
-            //EventManager.Instance.TriggerEvent();//walk
+            EventManager.Instance.TriggerEvent();//walk
 
             CharMoveSpin();
 

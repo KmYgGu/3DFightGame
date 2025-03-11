@@ -123,22 +123,26 @@ public class EnemyStat : MonoBehaviour
         switch (playerStat.aniState)
         {
             case AnimationTag.Attack1:
-                enemyHp -= playerStat.playerAttackPower; //10
+                enemyHp -= playerStat.playerAttackPower; //50
+                
                 break;
             case AnimationTag.Attack2:
-                enemyHp -= playerStat.playerAttackPower +2;
+                enemyHp -= playerStat.playerAttackPower +10;
+                ;
                 break;
             case AnimationTag.Attack3:
-                enemyHp -= playerStat.playerAttackPower + 5;
+                enemyHp -= playerStat.playerAttackPower + 25;
+                
                 break;
             case AnimationTag.Attack4:
                 enemyHp -= playerStat.playerAttackPower * 2;
+                
                 break;
             case AnimationTag.Attack5:
                 enemyHp -= playerStat.playerAttackPower;
                 break;
             case AnimationTag.Attack6:
-                enemyHp -= playerStat.playerAttackPower + 2;
+                enemyHp -= playerStat.playerAttackPower + 20;
                 break;
             case AnimationTag.Attack7:
                 enemyHp -= playerStat.playerAttackPower;
@@ -147,7 +151,7 @@ public class EnemyStat : MonoBehaviour
                 enemyHp -= playerStat.playerAttackPower *3;
                 break;
             case AnimationTag.JumpAttack:
-                enemyHp -= playerStat.playerAttackPower;
+                enemyHp -= playerStat.playerAttackPower + 5;
                 break;
             case AnimationTag.CounterAttack:
                 enemyHp -= playerStat.playerAttackPower;

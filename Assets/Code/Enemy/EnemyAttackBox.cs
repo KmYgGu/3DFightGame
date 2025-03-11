@@ -47,28 +47,47 @@ public class EnemyAttackBox : MonoBehaviour
             //isAttack = true;
             enemyStat.ChangeisAttacktrue();
 
-            Debug.Log(other.gameObject.name);
+            //Debug.Log(other.gameObject.name);
             if (other.CompareTag("Guard"))
             {
                 
 
                 playerHitBox.Defence();
+                return;
 
             }
-            if (other.gameObject.transform.IsChildOf(playerHitboxTransform)&&(!other.CompareTag("Guard")))
+            else if (other.gameObject.transform.IsChildOf(playerHitboxTransform) && (!other.CompareTag("Guard")))
             {
 
-                //playerHitBox.HitAniDamage(gameObject);
 
+                Debug.Log(other.gameObject.name);
                 PlayerDam?.Invoke(this);
 
-
             }
+            
+
+
+
+        }
                         
+    }
+
+    IEnumerator CheckotherCoi(Collider other)
+    {
+        yield return new WaitForFixedUpdate(); // 한 프레임 대기
+        //yield return new WaitForSeconds(0.5f);
+        if (other.gameObject.transform.IsChildOf(playerHitboxTransform) && (!other.CompareTag("Guard")))
+        {
 
             
+            //Debug.Log(other.gameObject.name);
+            PlayerDam?.Invoke(this);
+
+        }
+        else
+        {
+            yield return null;
         }
         
-                
     }
 }
