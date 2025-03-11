@@ -6,27 +6,56 @@ public class EnemyMove : MonoBehaviour
 {
     [SerializeField] private Transform target;  // 상대 캐릭터의 Transform
     private CharacterController controller;
+    [SerializeField]private Animator animator;
+
+    private int animHash_walk = Animator.StringToHash("isWalk");
+    private int animHash_Run = Animator.StringToHash("isRun");
 
     private float MoveDistance = 0.6f; // 감지 거리
     private float EnemymoveSpeed = 2f;
 
     private float RunMultiplier = 2f; // 달리기 시 속도 배율
-    private float RunStartDistance = 3f; // 달리기 시작 거리
+    private float RunStartDistance = 2f; // 달리기 시작 거리
 
     [SerializeField]private bool isRunning = false; // 현재 달리기 중인지 확인
+    bool ismoveDone = false;
 
+    AIEnemy aIEnemy;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TryGetComponent<CharacterController>(out controller);
+        animator = GetComponentInChildren<Animator>();
+        TryGetComponent<AIEnemy>(out aIEnemy);
     }
 
     // Update is called once per frame
-    void Update()
+    
+
+    public EnemyAIis DoMoveorDamage()
     {
+        while (ismoveDone)
+        {
+            Distance();
+            LookTarget();
+        }
+        return EnemyAIis.escape;
+    }
+
+    public IEnumerator EnemyAlMove()
+    {
+        //while (!ismoveDone)// update문보다 더빠름
+        {
+           
+        }
+        //Debug.Log("실행이 되었나?");
+
         Distance();
         LookTarget();
+
+        yield return new WaitForEndOfFrame();
+
     }
 
     void Distance()
@@ -41,9 +70,13 @@ public class EnemyMove : MonoBehaviour
 
         float distanceToTarget = Mathf.Sqrt(absX * absX + absZ * absZ); // 2D 거리 계산 (y축 제외)
 
-        if (absX < MoveDistance && absZ < MoveDistance)
+        if (absX < MoveDistance && absZ < MoveDistance)//목표 거리에 다가옴
         {
+            animator.SetBool(animHash_walk, false);
+            animator.SetBool(animHash_Run, false);
             isRunning = false;
+            ismoveDone = true;
+            aIEnemy.ChangedenemyAi(EnemyAIis.canAttack);// 이동 완료후엔 무조건 공격
             return; // 타겟과 너무 가까우면 이동 안 함
         }
 
@@ -76,6 +109,11 @@ public class EnemyMove : MonoBehaviour
 
         // 이동 속도 결정 (달리기 상태라면 2배 속도)
         float currentSpeed = isRunning ? EnemymoveSpeed * RunMultiplier : EnemymoveSpeed;
+
+        int AniHash = isRunning ? animHash_Run : animHash_walk;
+        //int AniHash2 = !isRunning ? animHash_Run : animHash_walk;
+        animator.SetBool(AniHash, true);
+        //animator.SetBool(AniHash2, false);
 
         controller.Move(moveDirection * currentSpeed * Time.deltaTime);
 

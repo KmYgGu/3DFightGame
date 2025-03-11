@@ -74,13 +74,6 @@ public class EnemyStat : MonoBehaviour
 
     }
 
-    /*private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            ChangeisAttackfalse();
-        }
-    }*/
 
     private void OnEnable()
     {

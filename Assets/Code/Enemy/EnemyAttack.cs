@@ -7,8 +7,9 @@ public class EnemyAttack : MonoBehaviour
     // 적은 플레이어가 공격을 맞았는 지, 막았는 지에 따라 공격 콤보가 달라지게 변경
 
     private EnemyStat enemyStat;
+    private AIEnemy aIEnemy;
 
-    private Animator animator;
+    private Animator animator; // 재생되는 애니메이션 길이 가져오기
     private int animHash_Attack1 = Animator.StringToHash("isAttack1");
     private int animHash_Attack2 = Animator.StringToHash("isAttack2");
     private int animHash_Attack3 = Animator.StringToHash("isAttack3");
@@ -23,10 +24,11 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField]private bool isAttacking = false;// 공격중이면 다른 공격은 안되게
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         enemyStat =GetComponentInParent<EnemyStat>();
         TryGetComponent<Animator>(out animator);
+        aIEnemy = GetComponentInParent<AIEnemy>();
     }
 
     // Update is called once per frame
@@ -34,7 +36,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad1) && !isAttacking)
         {
-            enemyStat.ChangeisAttackfalse();
+            //enemyStat.ChangeisAttackfalse();
             StartCoroutine("Attack1");
             
         }
@@ -42,43 +44,76 @@ public class EnemyAttack : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Keypad2) && !isAttacking)
         {
-            enemyStat.ChangeisAttackfalse();
+            //enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack2");
         }
             
 
         if (Input.GetKeyDown(KeyCode.Keypad3) && !isAttacking)
         {
-            enemyStat.ChangeisAttackfalse();
+            //enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack3");
         }
             
 
         if (Input.GetKeyDown(KeyCode.Keypad4) && !isAttacking)
         {
-            enemyStat.ChangeisAttackfalse();
+            //enemyStat.ChangeisAttackfalse();
             StartCoroutine("Attack4");
         }
             
 
         if (Input.GetKeyDown(KeyCode.Keypad5) && !isAttacking)
         {
-            enemyStat.ChangeisAttackfalse();
+            //enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack4");
         }
             
 
     }
-
-    IEnumerator Attack1()// 한 손 슬래쉬
+    public IEnumerator AttackChoice()
     {
+        //aIEnemy.ChangedenemyAi(EnemyAIis.Attacking);
+        //if (!enemyStat.isattack)
+        {
+            yield return StartCoroutine(Attack1());
+        }
+        /*else if (enemyStat.isattack && enemyStat.aniState == AnimationTag.Idle)
+        {
+            enemyStat.ChangeisAttackfalse();
+        }*/
+        
+    }
+    
+    public IEnumerator Attack1()// 한 손 슬래쉬
+    {
+
+        enemyStat.ChangeisAttackfalse();
         isAttacking = true;
 
+        //Debug.Log(enemyStat.aniState);
+        
         animator.SetTrigger(animHash_Attack1);
+
         EventManager.Instance.EnemyaniEvent();//Attack1
 
-        yield return new WaitForEndOfFrame();
+        //Debug.Log(1);
+        aIEnemy.ChangedenemyAi(EnemyAIis.idle);
+        yield return new WaitForEndOfFrame(); // 애니메이션 길이 만큼 기다리기
         isAttacking = false;
+
+        
+
+        /*if (enemyStat.isattack)// 공격이 맞았을 경우,
+        {
+
+        }
+        else if(!enemyStat.isattack && enemyStat.aniState == AnimationTag.Idle) // 공격이 맞지 않았고, 적이 대기상태 애니메이션일 경우.
+        {
+            
+        }*/
+
+
     }
 
     IEnumerator Attack2()// 반 자른 두손검
