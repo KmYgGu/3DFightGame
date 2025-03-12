@@ -5,16 +5,34 @@ using UnityEngine;
 public class EnemyDefence : MonoBehaviour
 {
     private Animator CharAni;
+    private AIEnemy aIEnemy;
 
     private int animHash_Gurad = Animator.StringToHash("isGuard");
     private int animHash_GuradUP = Animator.StringToHash("isGuardUp");
 
     [SerializeField] private GameObject GuardCol;
 
+    [SerializeField] private AnimationClip[] aniClip;
+
+    //[SerializeField] private GameObject EnemyBodyCoi;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TryGetComponent<Animator>(out CharAni);
+        aIEnemy = GetComponentInParent<AIEnemy>();
+    }
+
+    private void OnEnable()
+    {
+        PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+    }
+
+    private void OnDisable()
+    {
+        PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
     }
 
     // Update is called once per frame
@@ -41,6 +59,18 @@ public class EnemyDefence : MonoBehaviour
         }
     }*/
 
+    public IEnumerator GuardStart()
+    {
+        Debug.Log("적이 방어함");
+        CharAni.ResetTrigger(animHash_GuradUP);
+        CharAni.SetTrigger(animHash_Gurad);
+        EventManager.Instance.EnemyaniEvent();
+
+        aIEnemy.ChangedenemyAi(EnemyAIis.idle);
+        yield return new WaitForSeconds(aniClip[0].length);
+        StartCoroutine(aIEnemy.AIStart());
+    }
+
     IEnumerator GuardDisable()
     {
         StopCoroutine(GuardDisable());
@@ -59,6 +89,7 @@ public class EnemyDefence : MonoBehaviour
     {
         //Debug.Log("가드 활성화");
         GuardCol.SetActive(true);
+        //EnemyBodyCoi.SetActive(false);
 
     }
 
@@ -66,6 +97,19 @@ public class EnemyDefence : MonoBehaviour
     {
         //Debug.Log("가드가 풀림");
         GuardCol.SetActive(false);
+        //EnemyBodyCoi.SetActive(false);
 
+    }
+
+    public void EnemtDamageStopAI(PlayerAttackBox EnemyDam)// 데미지를 입으면, 모든 코루틴 중지
+    {
+
+        StopAllCoroutines();
+
+    }
+
+    public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    {
+        StopAllCoroutines();
     }
 }

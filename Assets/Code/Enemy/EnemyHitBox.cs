@@ -30,7 +30,7 @@ public class EnemyHitBox : MonoBehaviour
         PlayerAttackBox.EnemyDam -= DamageAniPlay;
     }
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponentInParent<Animator>();
 

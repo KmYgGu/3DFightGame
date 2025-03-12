@@ -17,7 +17,7 @@ public enum EnemyAIis
 
 public class AIEnemy : MonoBehaviour
 {
-    [SerializeField]EnemyAIis enemyAIis = EnemyAIis.idle;
+    [SerializeField]EnemyAIis enemyAIis = EnemyAIis.idle; // 처음에는 idle로
 
     private EnemyMove move;
     private EnemyAttack attack;
@@ -41,6 +41,17 @@ public class AIEnemy : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+    }
+
+    private void OnDisable()
+    {
+        PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+    }
 
     public IEnumerator AIStart()
     {
@@ -55,7 +66,8 @@ public class AIEnemy : MonoBehaviour
                 yield return StartCoroutine(attack.AttackChoice());
                 break;
             case EnemyAIis.Damage:
-
+                yield return StartCoroutine(defence.GuardStart());
+                break;
             default:
                 break;
         }
@@ -72,9 +84,22 @@ public class AIEnemy : MonoBehaviour
         enemyAIis = AIis;
     }
 
-    public void StopAI()// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    public void EnemtDamageStopAI(PlayerAttackBox EnemyDam)// 데미지를 입었을 때, 잠시 행동 중지 메소드
     {
-        StopCoroutine(AIStart());
+        Debug.Log("데미지 입음 발동");
+        StopAllCoroutines();
+        //StopCoroutine(AIStart());
+        enemyAIis = EnemyAIis.Damage;
+        StartCoroutine(AIStart());
+    }
+
+    public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 아무래도 애니메이션 나오는 동안 대기 시간 필요할 것
+    {
+        Debug.Log("데미지 입음 발동");
+        StopAllCoroutines();
+        //StopCoroutine(AIStart());
+        enemyAIis = EnemyAIis.Damage;
+        StartCoroutine(AIStart());
     }
 
     public void DoAi()// 다시 움직임을 재개

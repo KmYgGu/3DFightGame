@@ -50,9 +50,19 @@ public class EnemyAttack : MonoBehaviour
         };
 
     }
+    private void OnEnable()
+    {
+        PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+    }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
+    {
+        PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+    }
+
+    /*void Update()
     {
         if (Input.GetKeyDown(KeyCode.Keypad1) && !isAttacking)
         {
@@ -88,9 +98,9 @@ public class EnemyAttack : MonoBehaviour
             //enemyStat.ChangeisAttackfalse();
             StartCoroutine("SAttack4");
         }
-            
+          
 
-    }
+    }*/
     public IEnumerator AttackChoice()
     {
         
@@ -110,13 +120,13 @@ public class EnemyAttack : MonoBehaviour
             switch (randomValue)
             {
                 case 1:
-                    Debug.Log("1번 다음 공격");
+                    //Debug.Log("1번 다음 공격");
                     //StartCoroutine(coroutines[index]);
                     yield return StartCoroutine(coroutines[index]);
                     break;
                 
                 case 2:
-                    Debug.Log("2번 발차기 콤보");
+                    //Debug.Log("2번 발차기 콤보");
                     
                     yield return StartCoroutine(SAttack2());
                     break;
@@ -126,12 +136,12 @@ public class EnemyAttack : MonoBehaviour
         }
         else//거리 밖
         {
-            Debug.Log("거리 밖");
+            //Debug.Log("거리 밖");
             int randomValue = Random.Range(1, 3);
             switch (randomValue)
             {
                 case 1:
-                    Debug.Log("1번 이동");
+                    //Debug.Log("1번 이동");
                     aIEnemy.ChangedenemyAi(EnemyAIis.idle);
 
                     yield return new WaitForEndOfFrame();
@@ -310,5 +320,17 @@ public class EnemyAttack : MonoBehaviour
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[7].length);
         isAttacking = false;
+    }
+
+    public void EnemtDamageStopAI(PlayerAttackBox EnemyDam)// 데미지를 입으면, 모든 코루틴 중지
+    {
+        
+        StopAllCoroutines();
+        
+    }
+
+    public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    {
+        StopAllCoroutines();
     }
 }

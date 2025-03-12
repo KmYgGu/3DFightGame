@@ -30,8 +30,20 @@ public class EnemyMove : MonoBehaviour
         TryGetComponent<AIEnemy>(out aIEnemy);
     }
 
+    private void OnEnable()
+    {
+        PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+    }
+
+    private void OnDisable()
+    {
+        PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
+        PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+    }
+
     // Update is called once per frame
-    
+
     public void QuickLook()
     {
         Vector3 directionToTarget = (target.position - transform.position).normalized;
@@ -208,5 +220,17 @@ public class EnemyMove : MonoBehaviour
         float turnSpeed = 360f; // 초당 회전 각도 (조절 가능)
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
         //transform.rotation = targetRotation;
+    }
+
+    public void EnemtDamageStopAI(PlayerAttackBox EnemyDam)// 데미지를 입으면, 모든 코루틴 중지
+    {
+
+        StopAllCoroutines();
+
+    }
+
+    public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    {
+        StopAllCoroutines();
     }
 }

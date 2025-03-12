@@ -12,7 +12,7 @@ public class PlayerDefence : MonoBehaviour
     [SerializeField] private GameObject GuardCol;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TryGetComponent<Animator>(out CharAni);
     }

@@ -32,6 +32,7 @@ public class PlayerAniEvent : MonoBehaviour
         }
         DefenseColl.SetActive(false);
         playerAttack.canAttack = true;
+        playerAttack.waitLastAttack = true;
         playerAttack.AttackClear();
     }
 

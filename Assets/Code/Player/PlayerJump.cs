@@ -19,20 +19,18 @@ public class PlayerJump : MonoBehaviour
     private PlayerStat playerStat;
     private PlayerAniEvent playerAniEvent;
 
-    private void Update()
-    {
-
-        //GroundCheck();
-    }
-
-    private void Start()
+    private void Awake()
     {
         TryGetComponent<CharacterController>(out controller);
         animator = GetComponentInChildren<Animator>();//캐릭터 컨트롤러 위치에 놓음
         playerAniEvent = GetComponentInChildren<PlayerAniEvent>();
 
         TryGetComponent<PlayerStat>(out playerStat);
-        //TryGetComponent<Animator>(out animator);
+    }
+
+    private void Start()
+    {
+                
         StartCoroutine("FallJump");
         
     }

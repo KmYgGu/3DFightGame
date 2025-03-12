@@ -21,7 +21,7 @@ public class EnemyAttackBox : MonoBehaviour
 
     [SerializeField] private EnemyStat enemyStat;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         
         playerHitBox = playerHitbox.GetComponent<PlayerHitBox>();
@@ -59,8 +59,8 @@ public class EnemyAttackBox : MonoBehaviour
             else if (other.gameObject.transform.IsChildOf(playerHitboxTransform) && (!other.CompareTag("Guard")))
             {
 
-
-                Debug.Log(other.gameObject.name);
+                HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                //Debug.Log(other.gameObject.name);
                 PlayerDam?.Invoke(this);
 
             }

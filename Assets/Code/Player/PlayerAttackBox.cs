@@ -16,9 +16,12 @@ public class PlayerAttackBox : MonoBehaviour
     public delegate void EnemyDamaged(PlayerAttackBox PlayerHB);
     public static event EnemyDamaged EnemyDam;
 
+    public delegate void EnemyGuard(PlayerAttackBox PlayerGB);
+    public static event EnemyDamaged EnemyGad;
+
     [SerializeField] private PlayerStat playerStat;
 
-    void Start()
+    void Awake()
     {
 
         EnemyHitBox = EnemyHitbox.GetComponent<EnemyHitBox>();
@@ -49,14 +52,15 @@ public class PlayerAttackBox : MonoBehaviour
 
 
                 EnemyHitBox.Defence();
+                EnemyGad?.Invoke(this);
 
             }
             if (other.gameObject.transform.IsChildOf(EnemyHitboxTransform) && (!other.CompareTag("Guard")))
             {
 
                 //EnemyHitBox.HitAniDamage();
+                HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
 
-                
 
                 EnemyDam?.Invoke(this);
             }

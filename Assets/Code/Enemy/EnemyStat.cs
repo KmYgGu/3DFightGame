@@ -66,7 +66,7 @@ public class EnemyStat : MonoBehaviour
     // 충돌한 오브젝트(공격)를 저장할 HashSet
 
 
-    private void Start()
+    private void Awake()
     {
         tagReader = gameObject.GetComponentInChildren<AnimationTagReader>();
 

@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
     private bool isHolding = false;
 
     public bool canAttack = true;//공격을 시도하면 어택박스가 사라지기 전까진 추가적으로 공격불가
-    [SerializeField]private bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
+    [SerializeField]public bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
 
     private const int maxAttacks = 4; // 최대 4번 공격 가능
     private float lastAttackTime = 0f; // 마지막 공격 시간 기록

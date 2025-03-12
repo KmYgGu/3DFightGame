@@ -10,7 +10,7 @@ public class BodyTail : MonoBehaviour
     [SerializeField] private GameObject[] TailObj; //0 : 왼발, 1 : 오른발, 2 : 왼손..
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         TryGetComponent<PlayerAttack>(out playerAttack); // 같은 오브젝트에 있는 스크립트 가져오기
     }

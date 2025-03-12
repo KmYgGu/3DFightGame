@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static EnemySwordWind;
 
 public class PlayerStat : MonoBehaviour
 {
@@ -52,7 +53,7 @@ public class PlayerStat : MonoBehaviour
         isAttack = false;
     }
 
-    private void Start()
+    private void Awake()
     {
         tagReader = gameObject.GetComponentInChildren<AnimationTagReader>();
 
@@ -66,6 +67,8 @@ public class PlayerStat : MonoBehaviour
         EventManager.Instance.OnCustomEvent3 += OnEventReceived3;
 
         EnemyAttackBox.PlayerDam += HpDamage;
+
+        EnemySwordWind.PlayerSWDam += ESWDamage;
     }
 
     private void OnDisable()
@@ -74,6 +77,8 @@ public class PlayerStat : MonoBehaviour
         EventManager.Instance.OnCustomEvent3 -= OnEventReceived3;
 
         EnemyAttackBox.PlayerDam -= HpDamage;
+
+        EnemySwordWind.PlayerSWDam -= ESWDamage;
     }
 
     private void OnEventReceived3()
@@ -133,8 +138,12 @@ public class PlayerStat : MonoBehaviour
                 break;
 
         }
+        
+    }
 
-        //playerHp -= 100;
+    private void ESWDamage(EnemySwordWind SWD)
+    {
+        playerHp -= enemyStat.enemyAttackPower * 3;
     }
 
 }

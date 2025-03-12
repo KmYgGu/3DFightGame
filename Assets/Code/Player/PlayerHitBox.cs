@@ -36,11 +36,14 @@ public class PlayerHitBox : MonoBehaviour
     private void OnEnable()
     {
         EnemyAttackBox.PlayerDam += DamageAniPlay;
+
+        EnemySwordWind.PlayerSWDam += DamageSWDAniPlay;
     }
 
     private void OnDisable()
     {
         EnemyAttackBox.PlayerDam -= DamageAniPlay;
+        EnemySwordWind.PlayerSWDam -= DamageSWDAniPlay;
     }
 
     void DamageAniPlay(EnemyAttackBox PlayerDam)
@@ -62,15 +65,22 @@ public class PlayerHitBox : MonoBehaviour
                 }
 
                 
-
                 EventManager.Instance.TriggerEvent();//Damage
-                Debug.Log($"현재 공격한 적의 애니메이션은 {enemyStat.aniState}");
+                //Debug.Log($"현재 공격한 적의 애니메이션은 {enemyStat.aniState}");
                 break;
 
         }
 
     }
-    
+    void DamageSWDAniPlay(EnemySwordWind SWD)// 검기 관련 피해
+    {
+        animator.SetBool(animHash_walk, false);
+        animator.SetBool(animHash_Run, false);
+        animator.SetTrigger(animHash_Damage2);
+        EventManager.Instance.TriggerEvent();//Damage
+    }
+
+
 
     private void OnTriggerEnter(Collider other)// 플레이어 몸의 콜라이더가 겹쳐서 충돌되지 않게 방지
     {
