@@ -8,29 +8,21 @@ public class Timer : MonoBehaviour
     [SerializeField]TextMeshProUGUI textMeshProUGUI;
 
     private float timer = 99;
-    // Start is called before the first frame update
     void Start()
     {
-       // textMeshProUGUI.text = timer.ToString();
-       /*while(timer > 0)
+        StartCoroutine(CountdownTimer()); // 타이머 시작
+    }
+
+    IEnumerator CountdownTimer()
+    {
+        while (timer > 0)
         {
-            ChangeTime();
-        }*/
-    }
+            textMeshProUGUI.text = timer.ToString(); // UI 업데이트
+            yield return new WaitForSeconds(1f); // 1초 대기
+            timer--; // 시간 감소
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //ChangeTime();
-    }
-
-    void ChangeTime()
-    {
-        //timer -= Time.time;
-        timer = timer - 1f;// (Time.deltaTime);
-        //timer = (int)timer;
-        //timer = Mathf.FloorToInt(timer);
-
-        textMeshProUGUI.text = timer.ToString();
+        textMeshProUGUI.text = "0"; // 타이머 종료 후 0 표시
+        Debug.Log("타이머 종료!");
     }
 }

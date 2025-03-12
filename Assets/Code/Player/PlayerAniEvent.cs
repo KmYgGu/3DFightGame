@@ -7,8 +7,9 @@ public class PlayerAniEvent : MonoBehaviour
 {
     private PlayerAttack playerAttack;
     [SerializeField] private GameObject[] attackColl;
+    [SerializeField] private GameObject DefenseColl;
 
-    private void Start()
+    private void Awake()
     {
         TryGetComponent<PlayerAttack>(out playerAttack);
     }
@@ -23,12 +24,15 @@ public class PlayerAniEvent : MonoBehaviour
         EnemyAttackBox.PlayerDam -= AttackCoiReset;
     }
 
-    void AttackCoiReset(EnemyAttackBox PlayerDam)// 만약 데미지를 입었을 경우, 바로 공격판정들을 끄기
+    void AttackCoiReset(EnemyAttackBox PlayerDam)// 만약 데미지를 입었을 경우, 바로 공격판정들을 끄기, 방어끄기, 공격 가능한 상태
     {
         foreach (GameObject obj in attackColl)
         {
             obj.SetActive(false);
         }
+        DefenseColl.SetActive(false);
+        playerAttack.canAttack = true;
+        playerAttack.AttackClear();
     }
 
     private void aniEnent(int number)// 어택 박스 생기는 이벤트 함수
@@ -77,4 +81,6 @@ public class PlayerAniEvent : MonoBehaviour
     {
         attackColl[8].SetActive(false);
     }
+
+    
 }

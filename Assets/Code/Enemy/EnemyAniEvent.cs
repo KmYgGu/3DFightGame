@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyAniEvent : MonoBehaviour
 {
     [SerializeField] private GameObject[] attackColl;
+    [SerializeField] private GameObject DefenseColl;
 
     [SerializeField] private EnemyStat enemyStat;
 
@@ -24,6 +25,7 @@ public class EnemyAniEvent : MonoBehaviour
         {
             obj.SetActive(false);
         }
+        DefenseColl.SetActive(false);
     }
 
     private void attackcolEnable(int number)// 어택 박스 생기는 이벤트 함수

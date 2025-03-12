@@ -17,11 +17,12 @@ public enum EnemyAIis
 
 public class AIEnemy : MonoBehaviour
 {
-    EnemyAIis enemyAIis = EnemyAIis.idle;
+    [SerializeField]EnemyAIis enemyAIis = EnemyAIis.idle;
 
     private EnemyMove move;
     private EnemyAttack attack;
     private EnemyStat stat;
+    private EnemyDefence defence;
     // Start is called before the first frame update
 
 
@@ -30,6 +31,7 @@ public class AIEnemy : MonoBehaviour
         TryGetComponent<EnemyMove>(out move);
         attack = GetComponentInChildren<EnemyAttack>();
         TryGetComponent<EnemyStat>(out stat);
+        defence = GetComponentInChildren<EnemyDefence>();
 
         //AIStart();
     }
@@ -40,7 +42,7 @@ public class AIEnemy : MonoBehaviour
     }
 
 
-    private IEnumerator AIStart()
+    public IEnumerator AIStart()
     {
         
         switch (enemyAIis)
@@ -49,9 +51,11 @@ public class AIEnemy : MonoBehaviour
                 yield return StartCoroutine(move.EnemyAlMove());
                 break;
             case EnemyAIis.canAttack:
-                if(stat.aniState == AnimationTag.Idle)
+                //if(stat.aniState == AnimationTag.Idle)
                 yield return StartCoroutine(attack.AttackChoice());
                 break;
+            case EnemyAIis.Damage:
+
             default:
                 break;
         }
@@ -60,7 +64,7 @@ public class AIEnemy : MonoBehaviour
         //yield return new WaitForSeconds(1f);
 
         // 작업이 끝난 후 다시 반복
-        StartCoroutine(AIStart());
+        //StartCoroutine(AIStart());
     }
 
     public void ChangedenemyAi(EnemyAIis AIis)

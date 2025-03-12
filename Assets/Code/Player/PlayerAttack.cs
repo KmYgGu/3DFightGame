@@ -17,7 +17,7 @@ public class PlayerAttack : MonoBehaviour
     private float pressStartTime = 0f;
     private bool isHolding = false;
 
-    [SerializeField]private bool canAttack = true;//공격을 시도하면 어택박스가 사라지기 전까진 추가적으로 공격불가
+    public bool canAttack = true;//공격을 시도하면 어택박스가 사라지기 전까진 추가적으로 공격불가
     [SerializeField]private bool waitLastAttack = true;//마지막 공격 후에는 애니메이션은 불가하지만 스크립트는 계속 작동하기에 방지
 
     private const int maxAttacks = 4; // 최대 4번 공격 가능
@@ -31,6 +31,8 @@ public class PlayerAttack : MonoBehaviour
     private Animator CharAni;
     //private AnimatorStateInfo stateInfo;
     private AnimationTagReader tagReader;
+
+    private ChangeFaceMaterial changeFace;
 
     private int animHash_Attack1 = Animator.StringToHash("isAttack1");
     private int animHash_Attack2 = Animator.StringToHash("isAttack2");
@@ -54,13 +56,14 @@ public class PlayerAttack : MonoBehaviour
     private LookViewAttack lookView;
     
     [SerializeField]private AnimationClip[] animationClips;
+    [SerializeField] private GameObject DefenseColl;
 
     public AnimationClip GetAnimationClip(int aniNo)
     {
         return animationClips[aniNo];
     }
 
-    private void Start()
+    private void Awake()
     {
         TryGetComponent<Animator>(out CharAni);
         TryGetComponent<BodyTail>(out bodyTail); // 같은 오브젝트에 있는 스크립트 가져오기
@@ -69,7 +72,7 @@ public class PlayerAttack : MonoBehaviour
         playerStat = gameObject.GetComponentInParent<PlayerStat>();
         playerJump = gameObject.GetComponentInParent<PlayerJump>();
         lookView = gameObject.GetComponentInParent<LookViewAttack>();
-
+        changeFace = GetComponentInChildren<ChangeFaceMaterial>();
 
     }
     
@@ -79,6 +82,11 @@ public class PlayerAttack : MonoBehaviour
         HandleInput();
         CheckResetTimer();
                 
+    }
+
+    public void AttackClear()// 다른 스크립트에서 피격을 받았을 시 스택 초기화
+    {
+        attackStack.Clear();
     }
 
 
@@ -208,13 +216,14 @@ public class PlayerAttack : MonoBehaviour
                 attackStack.Clear(); // 공격 스택 초기화
                 lastAttackTime = 0f; // 타이머 초기화
 
-                //CharAni.ResetTrigger("isAttack1");
-                //CharAni.ResetTrigger("isSAttack1");
+                
                 waitLastAttack = false;
 
                 //Debug.Log(transform.parent.position.y);
                 CharAni.ResetTrigger(animHash_CAttack1);
                 CharAni.SetTrigger(animHash_CAttack1);
+                changeFace.ChangeFace(1);
+                DefenseColl.SetActive(false);
                 EventManager.Instance.TriggerEvent();//counterAttack
             }
 
@@ -232,6 +241,8 @@ public class PlayerAttack : MonoBehaviour
                         
             CharAni.ResetTrigger(animHash_FAttack1);
             CharAni.SetTrigger(animHash_FAttack1);
+
+            changeFace.ChangeFace(1);
             EventManager.Instance.TriggerEvent();//jumpAttack
         }
         
@@ -309,6 +320,7 @@ public class PlayerAttack : MonoBehaviour
         CharAni.SetTrigger(Aniname);
 
         lookView.CheckAndRotateToTarget();// 시야 안에 적이 있으면 적을 향해 캐릭터를 회전
+        changeFace.ChangeFace(1);
         EventManager.Instance.TriggerEvent();//attack
         //StartCoroutine("GetAnimationTag");
     }
@@ -326,6 +338,7 @@ public class PlayerAttack : MonoBehaviour
         CharAni.SetTrigger(Aniname);
 
         lookView.CheckAndRotateToTarget();
+        changeFace.ChangeFace(1);
         EventManager.Instance.TriggerEvent();//attack
     }
 

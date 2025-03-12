@@ -8,6 +8,7 @@ public class PlayerHitBox : MonoBehaviour
     [SerializeField] private Animator animator;
     
     [SerializeField] PlayerDefenceBox PlayerDefenceBox;
+    [SerializeField] private GameObject DefenseColl;
 
     private int animHash_Damage1 = Animator.StringToHash("DamageS");
     private int animHash_Damage2 = Animator.StringToHash("DamageM");
@@ -19,12 +20,15 @@ public class PlayerHitBox : MonoBehaviour
     private int animHash_Guard = Animator.StringToHash("isGuardSucess");
 
     [SerializeField] private EnemyStat enemyStat;
+    private PlayerStat playerStat;
+
 
     private ParticleSystem ps;
 
 
-    private void Start()
+    private void Awake()
     {
+        playerStat = GetComponentInParent<PlayerStat>();
         animator = GetComponentInParent<Animator>();
         ps = GetComponentInChildren<ParticleSystem>();
         
@@ -50,8 +54,14 @@ public class PlayerHitBox : MonoBehaviour
                 animator.SetBool(animHash_walk, false);
                 animator.SetBool(animHash_Run, false);
 
+                if(playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.JumpAttack)
+                    animator.SetTrigger(animHash_Damage4);
+                else
+                {
+                    animator.SetTrigger(animHash_Damage1);
+                }
 
-                animator.SetTrigger(animHash_Damage1);
+                
 
                 EventManager.Instance.TriggerEvent();//Damage
                 Debug.Log($"현재 공격한 적의 애니메이션은 {enemyStat.aniState}");
@@ -78,22 +88,18 @@ public class PlayerHitBox : MonoBehaviour
             Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
             return;
         }
-        //else
-        //{
-        //    Debug.Log("몸이 맞음");
-        //}
-
-        //Debug.Log(other.gameObject.name);
+        
 
     }
     
 
 
-    public void Defence()
+    public void Defence()//방어 성공
     {
         animator.SetTrigger(animHash_Guard);
         ps.Play();
-        Debug.Log("방어성공");  
+        DefenseColl.SetActive(false);//방어 성공시 방어판정 비활성화
+        //Debug.Log("방어성공");  
     }
 
 }

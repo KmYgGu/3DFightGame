@@ -13,7 +13,7 @@ public class PlayerJump : MonoBehaviour
 
     private Animator animator;
     private int animHash_idleJump = Animator.StringToHash("isJump");// 나중에 애니메이션 트리로 만들어야함
-    private int animHash_isGround = Animator.StringToHash("isGround");
+    private int animHash_isGround = Animator.StringToHash("isGround");// 점프하는 상태 해제하기 위해
 
     private CharacterController controller;
     private PlayerStat playerStat;
@@ -39,6 +39,7 @@ public class PlayerJump : MonoBehaviour
 
     List<AnimationTag> attacktypes = new List<AnimationTag> { AnimationTag.Attack1, AnimationTag.Attack2, AnimationTag.Attack3, AnimationTag.Attack4, AnimationTag.Attack5,
                                                                 AnimationTag.Attack6, AnimationTag.Attack7,AnimationTag.Attack8};
+    List<AnimationTag> Damagetypes = new List<AnimationTag> { AnimationTag.sDamage, AnimationTag.mDamage, AnimationTag.Air, AnimationTag.Down, AnimationTag.Stand };
 
 
     IEnumerator FallJump()
@@ -49,7 +50,7 @@ public class PlayerJump : MonoBehaviour
             if (isGround)
             {
                 //공격중이 아닐때
-                if (Input.GetButtonUp("Fire3") && isGround && !(attacktypes.Contains(playerStat.aniState)))//&& !(playerStat.aniState == AnimationTag.Attack)
+                if (Input.GetButtonUp("Fire3") && isGround && !(attacktypes.Contains(playerStat.aniState)) && !(Damagetypes.Contains(playerStat.aniState)))//
                 {
                     isGround = false;
                     
@@ -76,6 +77,8 @@ public class PlayerJump : MonoBehaviour
         //Debug.Log("점프");
         animator.ResetTrigger("isAttack1");
         animator.ResetTrigger("isSAttack1");
+
+        animator.SetBool("isGround2", false);
 
 
         animator.ResetTrigger("isFAttack1");// 점프 공격키 연타하고 착지하고 다시 점프하면, 공격이 나가는 것을 방지
@@ -134,15 +137,16 @@ public class PlayerJump : MonoBehaviour
         isFalling = false;
     }
     
-    void GroundCheck()
+    public void GroundCheck()
     {
         
         // 추후 높게 띄어 졌을 때, 최고치 높이인 부분 부터 타임을 측정하여 땅에 도달할 때까지를 비교해 그 값이 클 경우 낙하 데미지 추가
         if (transform.position.y <= 0)
         {
-            //Debug.Log(1);
+            //Debug.Log(99);
             isGround = true;
-            animator.SetTrigger(animHash_isGround);
+            //animator.SetTrigger(animHash_isGround);
+            animator.SetBool("isGround2", true);
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
             playerAniEvent.isGroundjumpAttackCoi();

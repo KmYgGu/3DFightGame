@@ -12,7 +12,7 @@ public class PlayerControler : MonoBehaviour
     private int animHash_walk = Animator.StringToHash("isWalk");
     private int animHash_Run = Animator.StringToHash("isRun");
 
-    [SerializeField] private float playermoveSpeed;
+    private float playermoveSpeed = 1.5f;
 
     [SerializeField] private Vector3 moveDelta;
     [SerializeField] private Vector3 moveArrow;
@@ -31,7 +31,7 @@ public class PlayerControler : MonoBehaviour
     // 플레이어 스텟
     private PlayerStat playerStat;
 
-    private void Start()
+    private void Awake()
     {
         TryGetComponent<CharacterController>(out controller);
         playerAnimtor = gameObject.GetComponentInChildren<Animator>();

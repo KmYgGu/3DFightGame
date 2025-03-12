@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChangeFaceMaterial : MonoBehaviour
 {
-    [SerializeField] private Material newFaceMaterial;
+    [SerializeField] private Material[] newFaceMaterial;
     [SerializeField] private SkinnedMeshRenderer facerender;
 
     // Start is called before the first frame update
@@ -14,20 +14,21 @@ public class ChangeFaceMaterial : MonoBehaviour
         //facerender.materials[2] = newFaceMaterial;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ChangeFace();
-        }
-    }
 
-    void ChangeFace()
+    public void ChangeFace(int index)
     {
         Material[] materials = facerender.materials;
         int faceMaterialIndex = 2; // 얼굴 머터리얼의 인덱스 확인 후 수정
-        materials[faceMaterialIndex] = newFaceMaterial;
+        materials[faceMaterialIndex] = newFaceMaterial[index];
+        facerender.materials = materials;
+
+        //facerender.materials[2] = newFaceMaterial;
+    }
+    public void ChangeEnemyFace(int index)
+    {
+        Material[] materials = facerender.materials;
+        int faceMaterialIndex = 0; // 얼굴 머터리얼의 인덱스 확인 후 수정
+        materials[faceMaterialIndex] = newFaceMaterial[index];
         facerender.materials = materials;
 
         //facerender.materials[2] = newFaceMaterial;

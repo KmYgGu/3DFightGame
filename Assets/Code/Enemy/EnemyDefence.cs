@@ -18,7 +18,7 @@ public class EnemyDefence : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (Input.GetButtonDown("Fire2"))
         {
@@ -28,12 +28,7 @@ public class EnemyDefence : MonoBehaviour
 
         if (Input.GetButton("Fire2"))// S키 버튼
         {
-            //Vector3 moveArrow = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-            //float newAngle = Mathf.Atan2(moveArrow.x, moveArrow.z) * Mathf.Rad2Deg;
-            //float targetAngle = Mathf.Round(newAngle / 45.0f) * 45.0f; // 8방향 스냅
-
-            //if (moveArrow != Vector3.zero)
-                //transform.parent.rotation = Quaternion.AngleAxis(targetAngle, Vector3.up);
+            
 
             CharAni.SetTrigger(animHash_Gurad);
             EventManager.Instance.EnemyaniEvent();
@@ -44,7 +39,7 @@ public class EnemyDefence : MonoBehaviour
             StartCoroutine("GuardDisable");
 
         }
-    }
+    }*/
 
     IEnumerator GuardDisable()
     {
