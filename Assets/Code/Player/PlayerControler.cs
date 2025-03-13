@@ -17,7 +17,7 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] private Vector3 moveDelta;
     [SerializeField] private Vector3 moveArrow;
     Quaternion toRotation;//
-    [SerializeField] private bool firstSpin = false;
+    
 
     [SerializeField] private Queue<Vector3> moveHistory = new Queue<Vector3>();
 
@@ -31,6 +31,8 @@ public class PlayerControler : MonoBehaviour
     // 플레이어 스텟
     private PlayerStat playerStat;
 
+    public bool HoldOut = false;
+
     private void Awake()
     {
         TryGetComponent<CharacterController>(out controller);
@@ -40,45 +42,82 @@ public class PlayerControler : MonoBehaviour
 
         //StartCoroutine(HandleRotation()); // 코루틴 시작
     }
+    private void OnEnable()
+    {
+        EnemyAttackBox.PlayerDam += MoveStop;
+        EnemySwordWind.PlayerSWDam += MoveSWStop;
+    }
+
+    private void OnDisable()
+    {
+        EnemyAttackBox.PlayerDam -= MoveStop;
+        EnemySwordWind.PlayerSWDam -= MoveSWStop;
+    }
+
+    void MoveStop(EnemyAttackBox PlayerDam)
+    {
+        HoldOut = true;
+        playerAnimtor.SetBool(animHash_walk, false);
+        //playerAnimtor.SetBool(animHash_Run, false);
+        
+    }
+    void MoveSWStop(EnemySwordWind SWD)
+    {
+        HoldOut = true;
+        playerAnimtor.SetBool(animHash_walk, false);
+        //playerAnimtor.SetBool(animHash_Run, false);
+
+    }
 
     private void Update()
     {
+        //PlayerControlerUpdate();
+
+
+
+    }
+
+    public void PlayerControlerUpdate()
+    {
         if (playerStat.aniState == AnimationTag.Idle || playerStat.aniState == AnimationTag.walk || playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.Run || playerStat.aniState == AnimationTag.JumpAttack)
         {
-            if(!(Input.GetButton("Fire2")))
-            WalkAndRun();
+            if (!(Input.GetButton("Fire2")))
+                WalkAndRun();
         }
-        
-
     }
     List<AnimationTag> Damagetypes = new List<AnimationTag> { AnimationTag.sDamage, AnimationTag.mDamage, AnimationTag.Air};
 
     void WalkAndRun()
     {
-        moveArrow = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         
+        
+            moveArrow = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
 
-        // 입력이 없으면 달리기 상태를 해제
-        if (moveArrow == Vector3.zero)
-        {
-            isRunning = false;
-            goRun = false;
-            playerAnimtor.SetBool(animHash_walk, false);
-            playerAnimtor.SetBool(animHash_Run, false);
 
-            //EventManager.Instance.TriggerEvent();//idle
-        }
-        else
-        {
-            // 달리기 감지 (더블 탭)
-            Run();
-        }
+            // 입력이 없으면 달리기 상태를 해제
+            if (moveArrow == Vector3.zero)
+            {
+                isRunning = false;
+                goRun = false;
+                playerAnimtor.SetBool(animHash_walk, false);
+                playerAnimtor.SetBool(animHash_Run, false);
 
-        // 달리기 상태가 아니라면 걷기 동작 실행
-        if (!isRunning)
-        {
-            Walk();
-        }
+                //EventManager.Instance.TriggerEvent();//idle
+            }
+            else
+            {
+                // 달리기 감지 (더블 탭)
+                Run();
+            }
+
+            // 달리기 상태가 아니라면 걷기 동작 실행
+            if (!isRunning)
+            {
+                Walk();
+            }
+        
+        if ((Input.GetButton("Horizontal") || Input.GetButton("Vertical")))
+            HoldOut = false;
 
     }
 
@@ -90,9 +129,10 @@ public class PlayerControler : MonoBehaviour
         //if (moveArrow != Vector3.zero)     
         if (moveArrow.x != 0 || moveArrow.z != 0)
         {
-            
+
             //if(!(Damagetypes.Contains(playerStat.aniState))) // 이동하면서 데미지를 받으면 idle로 돌아오질 않음
-            playerAnimtor.SetBool(animHash_walk, true);
+            if (!(HoldOut))
+                playerAnimtor.SetBool(animHash_walk, true);
 
             
             EventManager.Instance.TriggerEvent();//walk
@@ -120,7 +160,9 @@ public class PlayerControler : MonoBehaviour
                 {
                     //Debug.Log("Running!");
                     playerAnimtor.SetBool(animHash_walk, false);
-                    playerAnimtor.SetBool(animHash_Run, true);
+
+                    if (!(HoldOut))
+                        playerAnimtor.SetBool(animHash_Run, true);
                     
 
 

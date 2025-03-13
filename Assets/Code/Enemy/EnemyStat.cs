@@ -31,12 +31,19 @@ public class EnemyStat : MonoBehaviour
     public delegate void EnemyHpChanged();
     public event EnemyHpChanged EnemyHpCha;
 
-    private int EnemyAttackPower = 50;
+    private int EnemyAttackPower = 100;
     public int enemyAttackPower => EnemyAttackPower;
 
     private AnimationTagReader tagReader;
 
     [SerializeField] private PlayerStat playerStat;
+
+    [SerializeField] private bool isGuarding = false;
+    public bool ISGuarding
+    {
+        get => isGuarding;
+        set => isGuarding = value;
+    }
 
     [SerializeField]private bool IsAttack = false;
 
@@ -154,8 +161,13 @@ public class EnemyStat : MonoBehaviour
                 break;
 
         }
+        if (enemyHp <= 0)
+        {
+            //Debug.Log("플레이어 체력이 0 이하가 되었습니다!");
+            EventManager.Instance.EnemyDieEvent();
+        }
 
-        
+
         //enemyHp -= 100;
     }
 }

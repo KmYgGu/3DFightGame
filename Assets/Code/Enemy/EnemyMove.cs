@@ -18,7 +18,7 @@ public class EnemyMove : MonoBehaviour
     private float RunStartDistance = 2f; // 달리기 시작 거리
 
     [SerializeField]private bool isRunning = false; // 현재 달리기 중인지 확인
-    bool ismoveDone = false;
+    
 
     AIEnemy aIEnemy;
 
@@ -34,12 +34,18 @@ public class EnemyMove : MonoBehaviour
     {
         PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied += StopMove;
+        EventManager.Instance.EnemyDied += StopMove;
     }
 
     private void OnDisable()
     {
         PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied -= StopMove;
+        EventManager.Instance.EnemyDied -= StopMove;
     }
 
     // Update is called once per frame
@@ -154,7 +160,7 @@ public class EnemyMove : MonoBehaviour
             animator.SetBool(animHash_walk, false);
             animator.SetBool(animHash_Run, false);
             isRunning = false;
-            ismoveDone = true;
+            
             aIEnemy.ChangedenemyAi(EnemyAIis.canAttack);// 이동 완료후엔 무조건 공격
 
             yield break; // 타겟과 너무 가까우면 이동 안 함
@@ -230,6 +236,11 @@ public class EnemyMove : MonoBehaviour
     }
 
     public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    {
+        StopAllCoroutines();
+    }
+
+    void StopMove()
     {
         StopAllCoroutines();
     }

@@ -20,6 +20,7 @@ public class PlayerAttackBox : MonoBehaviour
     public static event EnemyDamaged EnemyGad;
 
     [SerializeField] private PlayerStat playerStat;
+    [SerializeField] private EnemyStat enemyStat;
 
     void Awake()
     {
@@ -47,7 +48,7 @@ public class PlayerAttackBox : MonoBehaviour
         {
             playerStat.ChangeisAttacktrue();
 
-            if (other.CompareTag("Guard"))
+            /*if (other.CompareTag("Guard"))
             {
 
 
@@ -63,7 +64,47 @@ public class PlayerAttackBox : MonoBehaviour
 
 
                 EnemyDam?.Invoke(this);
+            }*/
+            if (enemyStat.ISGuarding)
+            {
+                Vector3 attackDirection = (playerCharCon.transform.position - EnemyCharCon.transform.position).normalized;
+                float dot = Vector3.Dot(EnemyCharCon.transform.forward, attackDirection);
+
+                if (dot > 0)
+                {
+                    int randomValue = Random.Range(1, 3);//절반의 확률로 방어
+                    switch (randomValue)
+                    {
+                        case 1:
+                            //Debug.Log("적 방어");
+                            EnemyHitBox.Defence();
+                            EnemyGad?.Invoke(this);
+                            break;
+
+                        case 2:
+                            HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                            EnemyDam?.Invoke(this);
+                            break;
+                        default:
+                            break;
+                    }
+                                        
+                    //EnemyHitBox.Defence();
+                    //EnemyGad?.Invoke(this);
+                }
+                else
+                {
+                    //Debug.Log("뒷면 공격!");
+                    HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                    EnemyDam?.Invoke(this);
+                }
             }
+            else
+            {
+                HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                EnemyDam?.Invoke(this);
+            }
+
 
 
 

@@ -8,7 +8,8 @@ public class PlayerJump : MonoBehaviour
     [SerializeField]private bool isGround = true;
     public bool isground => isGround;
 
-    private bool isFalling = false;
+    //private bool isFalling = false;
+    public bool isFalling;// = false;
     private float acceleration = 13;
 
     private Animator animator;
@@ -28,19 +29,55 @@ public class PlayerJump : MonoBehaviour
         TryGetComponent<PlayerStat>(out playerStat);
     }
 
+    private void OnEnable()
+    {
+        
+        EventManager.Instance.PlayerDied += StopMove;
+        EventManager.Instance.EnemyDied += StopMove;
+    }
+
+    private void OnDisable()
+    {
+        
+        EventManager.Instance.PlayerDied -= StopMove;
+        EventManager.Instance.EnemyDied -= StopMove;
+    }
     private void Start()
     {
                 
         StartCoroutine("FallJump");
         
     }
+    
 
     List<AnimationTag> attacktypes = new List<AnimationTag> { AnimationTag.Attack1, AnimationTag.Attack2, AnimationTag.Attack3, AnimationTag.Attack4, AnimationTag.Attack5,
                                                                 AnimationTag.Attack6, AnimationTag.Attack7,AnimationTag.Attack8};
     List<AnimationTag> Damagetypes = new List<AnimationTag> { AnimationTag.sDamage, AnimationTag.mDamage, AnimationTag.Air, AnimationTag.Down, AnimationTag.Stand };
 
+    void FallJumpUpdate()
+    {
+        if (isGround)
+        {
+            //공격중이 아닐때
+            if (Input.GetButtonUp("Fire3") && isGround && !(attacktypes.Contains(playerStat.aniState)) && !(Damagetypes.Contains(playerStat.aniState)))//
+            {
+                isGround = false;
 
-    IEnumerator FallJump()
+                StartCoroutine(Jump());
+            }
+
+        }
+        else
+        {
+            if (!isFalling)
+            {
+                StartCoroutine("Falling");
+
+            }
+
+        }
+    }
+    public IEnumerator FallJump()
     {
 
         while (true)
@@ -152,6 +189,11 @@ public class PlayerJump : MonoBehaviour
 
             //EventManager.Instance.TriggerEvent();// 땅에 닿았을 때 애니메이션 체크
         }
+    }
+
+    void StopMove()
+    {
+        //StopAllCoroutines();
     }
 
 }

@@ -6,26 +6,28 @@ public class EnemyHitBox : MonoBehaviour
 {
     [SerializeField] private Animator animator;
 
-    [SerializeField] PlayerDefenceBox PlayerDefenceBox;
+    //[SerializeField] PlayerDefenceBox PlayerDefenceBox;
 
     private int animHash_Damage1 = Animator.StringToHash("DamageS");
     private int animHash_Damage2 = Animator.StringToHash("DamageM");
     private int animHash_Damage4 = Animator.StringToHash("DamageF");
 
     [SerializeField] private PlayerStat playerStat;
+    private EnemyStat enemyStat;
 
     private int animHash_Guard = Animator.StringToHash("isGuardSucess");
-    
+
+    private ParticleSystem ps;
+
     private void OnEnable()
     {
        
-
         PlayerAttackBox.EnemyDam += DamageAniPlay;
     }
 
     private void OnDisable()
     {
-            
+          
 
         PlayerAttackBox.EnemyDam -= DamageAniPlay;
     }
@@ -33,7 +35,8 @@ public class EnemyHitBox : MonoBehaviour
     private void Awake()
     {
         animator = GetComponentInParent<Animator>();
-
+        enemyStat = GetComponentInParent<EnemyStat>();
+        ps = GetComponentInChildren<ParticleSystem>();
     }
 
     private void OnTriggerEnter(Collider other)// 플레이어 몸의 콜라이더가 겹쳐서 충돌되지 않게 방지
@@ -47,7 +50,7 @@ public class EnemyHitBox : MonoBehaviour
 
         if (other.CompareTag("Guard")) return;
 
-        if (PlayerDefenceBox.isDenfence) return;
+        //if (PlayerDefenceBox.isDenfence) return;
 
     }
 
@@ -69,28 +72,12 @@ public class EnemyHitBox : MonoBehaviour
 
     }
 
-    public void HitAniDamage()//안씀
-    {
-        
-        switch (playerStat.aniState)
-        {
-            
-            case AnimationTag.Guard :
-            break;
-            default :
-                animator.SetTrigger(animHash_Damage1);
-                //Debug.Log(playerStat.aniState);
-                break;
-
-        }
-       
-        
-  
-    }
-
+    
     public void Defence()
     {
-        animator.SetTrigger(animHash_Guard); // 아직 상대방은 방어 모션이 없음
+        animator.SetTrigger(animHash_Guard);
+        ps.Play();
         //Debug.Log("방어성공");
+        enemyStat.ISGuarding = false;
     }
 }

@@ -20,6 +20,8 @@ public class EnemyAttackBox : MonoBehaviour
 
 
     [SerializeField] private EnemyStat enemyStat;
+
+    [SerializeField] private PlayerStat playerStat;
     // Start is called before the first frame update
     void Awake()
     {
@@ -47,8 +49,31 @@ public class EnemyAttackBox : MonoBehaviour
             //isAttack = true;
             enemyStat.ChangeisAttacktrue();
 
-            //Debug.Log(other.gameObject.name);
-            if (other.CompareTag("Guard"))
+            if (playerStat.ISGuarding)
+            {
+                Vector3 attackDirection = (EnemyCharCon.transform.position - playerCharCon.transform.position).normalized;
+                float dot = Vector3.Dot(playerCharCon.transform.forward, attackDirection);
+
+                if (dot > 0)
+                {
+                    //Debug.Log("앞면 공격!");
+                    playerHitBox.Defence();
+                }
+                else
+                {
+                    //Debug.Log("뒷면 공격!");
+                    HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                    PlayerDam?.Invoke(this);
+                }
+            }
+            else
+            {
+                HitImpactManager.Instance.SpawnAttack(other.transform);// 맞은 곳에 임팩트 생성
+                PlayerDam?.Invoke(this);
+            }
+
+
+            /*if (other.CompareTag("Guard"))
             {
                 
 
@@ -63,7 +88,7 @@ public class EnemyAttackBox : MonoBehaviour
                 //Debug.Log(other.gameObject.name);
                 PlayerDam?.Invoke(this);
 
-            }
+            }*/
             
 
 

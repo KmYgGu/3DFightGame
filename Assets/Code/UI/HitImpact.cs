@@ -22,6 +22,7 @@ public class HitImpact : MonoBehaviour
 
     private void OnEnable()
     {
+        gameObject.transform.position = Vector3.zero;
         ps.Play();
         // 일정 시간 후 자동 반환
         Invoke(nameof(ReturnToPool), 2f);

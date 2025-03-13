@@ -56,7 +56,7 @@ public class PlayerAttack : MonoBehaviour
     private LookViewAttack lookView;
     
     [SerializeField]private AnimationClip[] animationClips;
-    [SerializeField] private GameObject DefenseColl;
+    
 
     public AnimationClip GetAnimationClip(int aniNo)
     {
@@ -78,10 +78,14 @@ public class PlayerAttack : MonoBehaviour
     
     void Update()
     {
+        //PlayerAttackUpdate();
 
+    }
+
+    public void PlayerAttackUpdate()
+    {
         HandleInput();
         CheckResetTimer();
-                
     }
 
     public void AttackClear()// 다른 스크립트에서 피격을 받았을 시 스택 초기화
@@ -223,7 +227,9 @@ public class PlayerAttack : MonoBehaviour
                 CharAni.ResetTrigger(animHash_CAttack1);
                 CharAni.SetTrigger(animHash_CAttack1);
                 changeFace.ChangeFace(1);
-                DefenseColl.SetActive(false);
+                //DefenseColl.SetActive(false);
+                playerStat.ISGuarding = false;
+
                 EventManager.Instance.TriggerEvent();//counterAttack
             }
 

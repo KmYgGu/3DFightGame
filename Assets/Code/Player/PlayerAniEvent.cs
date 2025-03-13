@@ -7,11 +7,14 @@ public class PlayerAniEvent : MonoBehaviour
 {
     private PlayerAttack playerAttack;
     [SerializeField] private GameObject[] attackColl;
-    [SerializeField] private GameObject DefenseColl;
+    //[SerializeField] private GameObject DefenseColl;
+
+    private PlayerStat playerStat;
 
     private void Awake()
     {
         TryGetComponent<PlayerAttack>(out playerAttack);
+        playerStat = GetComponentInParent<PlayerStat>();
     }
 
     private void OnEnable()
@@ -30,7 +33,9 @@ public class PlayerAniEvent : MonoBehaviour
         {
             obj.SetActive(false);
         }
-        DefenseColl.SetActive(false);
+        //DefenseColl.SetActive(false);
+        playerStat.ISGuarding = false;
+
         playerAttack.canAttack = true;
         playerAttack.waitLastAttack = true;
         playerAttack.AttackClear();

@@ -7,7 +7,7 @@ public class PlayerHitBox : MonoBehaviour
     
     [SerializeField] private Animator animator;
     
-    [SerializeField] PlayerDefenceBox PlayerDefenceBox;
+    //[SerializeField] PlayerDefenceBox PlayerDefenceBox;
     [SerializeField] private GameObject DefenseColl;
 
     private int animHash_Damage1 = Animator.StringToHash("DamageS");
@@ -55,7 +55,7 @@ public class PlayerHitBox : MonoBehaviour
                 break;
             default:
                 animator.SetBool(animHash_walk, false);
-                animator.SetBool(animHash_Run, false);
+                //animator.SetBool(animHash_Run, false);
 
                 if(playerStat.aniState == AnimationTag.Jump || playerStat.aniState == AnimationTag.JumpAttack)
                     animator.SetTrigger(animHash_Damage4);
@@ -75,7 +75,8 @@ public class PlayerHitBox : MonoBehaviour
     void DamageSWDAniPlay(EnemySwordWind SWD)// 검기 관련 피해
     {
         animator.SetBool(animHash_walk, false);
-        animator.SetBool(animHash_Run, false);
+        //animator.SetBool(animHash_Run, false);
+
         animator.SetTrigger(animHash_Damage2);
         EventManager.Instance.TriggerEvent();//Damage
     }
@@ -93,11 +94,11 @@ public class PlayerHitBox : MonoBehaviour
 
         if (other.CompareTag("Guard")) return;
 
-        if (PlayerDefenceBox.isDenfence)
+        /*if (PlayerDefenceBox.isDenfence)
         {
             Debug.Log("몸통 충돌 무시 (방패가 먼저 충돌함)");
             return;
-        }
+        }*/
         
 
     }
@@ -108,8 +109,10 @@ public class PlayerHitBox : MonoBehaviour
     {
         animator.SetTrigger(animHash_Guard);
         ps.Play();
-        DefenseColl.SetActive(false);//방어 성공시 방어판정 비활성화
-        //Debug.Log("방어성공");  
+
+        playerStat.ISGuarding = false;
+        //DefenseColl.SetActive(false);//방어 성공시 방어판정 비활성화
+
     }
 
 }

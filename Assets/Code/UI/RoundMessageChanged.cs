@@ -18,7 +18,7 @@ public class RoundMessageChanged : MonoBehaviour
     }
 
 
-    IEnumerator RoundFight(int number)
+    public IEnumerator RoundFight(int number)
     {
         MessageImage.SetActive(true);
         RoundText.text = ($"Round {number}");
@@ -29,10 +29,21 @@ public class RoundMessageChanged : MonoBehaviour
         MessageImage.SetActive(false);
     }
 
-    IEnumerator WhoWin(string result)
+    public IEnumerator WhoWin(string result)
     {
         MessageImage.SetActive(true);
         RoundText.text = ($"K.O");
+        //yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(2);
+        RoundText.text = ($"You {result}!");
+        yield return new WaitForSeconds(1);
+        MessageImage.SetActive(false);
+    }
+
+    IEnumerator TimeOut(string result)
+    {
+        MessageImage.SetActive(true);
+        RoundText.text = ("Time Out");
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(2);
         RoundText.text = ($"You {result}!");

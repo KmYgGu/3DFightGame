@@ -24,7 +24,7 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private AnimationClip[] aniClip;
 
 
-    [SerializeField]private bool isAttacking = false;// 공격중이면 다른 공격은 안되게
+    //[SerializeField]private bool isAttacking = false;// 공격중이면 다른 공격은 안되게
 
     private IEnumerator[] coroutines;
     
@@ -54,53 +54,20 @@ public class EnemyAttack : MonoBehaviour
     {
         PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied += StopMove;
+        EventManager.Instance.EnemyDied += StopMove;
     }
 
     private void OnDisable()
     {
         PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied -= StopMove;
+        EventManager.Instance.EnemyDied -= StopMove;
     }
-
-    /*void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Keypad1) && !isAttacking)
-        {
-            //enemyStat.ChangeisAttackfalse();
-            StartCoroutine("Attack1");
-            
-        }
-            
-
-        if (Input.GetKeyDown(KeyCode.Keypad2) && !isAttacking)
-        {
-            //enemyStat.ChangeisAttackfalse();
-            StartCoroutine("SAttack2");
-        }
-            
-
-        if (Input.GetKeyDown(KeyCode.Keypad3) && !isAttacking)
-        {
-            //enemyStat.ChangeisAttackfalse();
-            StartCoroutine("SAttack3");
-        }
-            
-
-        if (Input.GetKeyDown(KeyCode.Keypad4) && !isAttacking)
-        {
-            //enemyStat.ChangeisAttackfalse();
-            StartCoroutine("Attack4");
-        }
-            
-
-        if (Input.GetKeyDown(KeyCode.Keypad5) && !isAttacking)
-        {
-            //enemyStat.ChangeisAttackfalse();
-            StartCoroutine("SAttack4");
-        }
-          
-
-    }*/
+        
     public IEnumerator AttackChoice()
     {
         
@@ -115,7 +82,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if (enemyMove.DistanceCheck())//거리안
         {
-            Debug.Log("거리 안");
+            //Debug.Log("거리 안");
             int randomValue = Random.Range(1, 3);
             switch (randomValue)
             {
@@ -166,7 +133,7 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
         
         animator.SetTrigger(animHash_Attack1);
 
@@ -175,7 +142,7 @@ public class EnemyAttack : MonoBehaviour
 
         //yield return new WaitForEndOfFrame(); // 애니메이션 길이 만큼 기다리기
         yield return new WaitForSeconds(aniClip[0].length);
-        isAttacking = false;
+        //isAttacking = false;
 
 
         yield return StartCoroutine(RandomAction(1));
@@ -188,14 +155,14 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_Attack2);
         EventManager.Instance.EnemyaniEvent();//Attack2
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[1].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         yield return StartCoroutine(RandomAction(2));
         //StartCoroutine(RandomAction(2));
@@ -205,14 +172,14 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_Attack3);
         EventManager.Instance.EnemyaniEvent();//Attack3
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[2].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         yield return StartCoroutine(RandomAction(3));
         //StartCoroutine(RandomAction(3));
@@ -222,7 +189,7 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_Attack4);
         EventManager.Instance.EnemyaniEvent();//Attack4
@@ -230,7 +197,7 @@ public class EnemyAttack : MonoBehaviour
         aIEnemy.ChangedenemyAi(EnemyAIis.idle);
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[3].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         //StartCoroutine(aIEnemy.AIStart());
 
@@ -241,7 +208,7 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack1);
         EventManager.Instance.EnemyaniEvent();//Attack5
@@ -249,7 +216,7 @@ public class EnemyAttack : MonoBehaviour
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[4].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         yield return StartCoroutine(RandomAction(1));
         //StartCoroutine(RandomAction(1));
@@ -259,14 +226,14 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack2);
         EventManager.Instance.EnemyaniEvent();//Attack6
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[5].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         int randomValue = Random.Range(1, 5);
         switch (randomValue)
@@ -281,7 +248,7 @@ public class EnemyAttack : MonoBehaviour
                 break;
 
             default:
-                Debug.Log("다음 발차기 공격");
+                //Debug.Log("다음 발차기 공격");
                 //StartCoroutine(SAttack1());
                 yield return StartCoroutine(SAttack3());
                 break;
@@ -294,14 +261,14 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack3);
         EventManager.Instance.EnemyaniEvent();//Attack7
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[6].length);
-        isAttacking = false;
+        //isAttacking = false;
 
         aIEnemy.ChangedenemyAi(EnemyAIis.idle);
 
@@ -312,14 +279,14 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyMove.QuickLook();
         enemyStat.ChangeisAttackfalse();
-        isAttacking = true;
+        //isAttacking = true;
 
         animator.SetTrigger(animHash_SAttack4);
         EventManager.Instance.EnemyaniEvent();//Attack8
 
         //yield return new WaitForEndOfFrame();
         yield return new WaitForSeconds(aniClip[7].length);
-        isAttacking = false;
+        //isAttacking = false;
     }
 
     public void EnemtDamageStopAI(PlayerAttackBox EnemyDam)// 데미지를 입으면, 모든 코루틴 중지
@@ -330,6 +297,11 @@ public class EnemyAttack : MonoBehaviour
     }
 
     public void EnemtGuardStopAI(PlayerAttackBox EnemyGad)// 데미지를 입었을 때, 잠시 행동 중지 메소드
+    {
+        StopAllCoroutines();
+    }
+
+    void StopMove()
     {
         StopAllCoroutines();
     }

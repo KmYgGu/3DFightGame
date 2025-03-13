@@ -32,15 +32,24 @@ public class PlayerStat : MonoBehaviour
     public delegate void PlayerHpChanged();
     public event PlayerHpChanged PlayerHpCha;
 
-    private int PlayerAttackPower = 50;
+    private int PlayerAttackPower = 100;
     public int playerAttackPower => PlayerAttackPower;
 
     private AnimationTagReader tagReader;
 
     [SerializeField] private EnemyStat enemyStat;
 
-    
+    [SerializeField] private bool isGuarding = false;
+    public bool ISGuarding
+    {
+        get => isGuarding;
+        set => isGuarding = value;
+    }
+
+
+
     [SerializeField] private bool isAttack = false;
+     
 
     public bool isattack => isAttack;
 
@@ -134,16 +143,29 @@ public class PlayerStat : MonoBehaviour
                 playerHp -= enemyStat.enemyAttackPower;
                 break;
             default:
-                Debug.Log("EnemyStatcs. 공격상태가 맞는지 확인");
+                //Debug.Log("EnemyStatcs. 공격상태가 맞는지 확인");
                 break;
 
         }
-        
+        // 체력이 0 이하로 떨어졌을 때 디버그 로그 출력
+        if (playerHp <= 0)
+        {
+            //Debug.Log("플레이어 체력이 0 이하가 되었습니다!");
+            EventManager.Instance.PlayerDieEvent();
+
+        }
+
+
     }
 
     private void ESWDamage(EnemySwordWind SWD)
     {
         playerHp -= enemyStat.enemyAttackPower * 3;
+        if (playerHp <= 0)
+        {
+            //Debug.Log("플레이어 체력이 0 이하가 되었습니다!");
+            EventManager.Instance.PlayerDieEvent();
+        }
     }
 
 }

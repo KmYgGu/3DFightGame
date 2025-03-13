@@ -37,7 +37,7 @@ public class AIEnemy : MonoBehaviour
     }
     private void Start()
     {
-        StartCoroutine(AIStart());
+        //StartCoroutine(AIStart());
         
     }
 
@@ -45,12 +45,18 @@ public class AIEnemy : MonoBehaviour
     {
         PlayerAttackBox.EnemyDam += EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad += EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied += StopMove;
+        EventManager.Instance.EnemyDied += StopMove;
     }
 
     private void OnDisable()
     {
         PlayerAttackBox.EnemyDam -= EnemtDamageStopAI;
         PlayerAttackBox.EnemyGad -= EnemtGuardStopAI;
+
+        EventManager.Instance.PlayerDied -= StopMove;
+        EventManager.Instance.EnemyDied -= StopMove;
     }
 
     public IEnumerator AIStart()
@@ -102,8 +108,8 @@ public class AIEnemy : MonoBehaviour
         StartCoroutine(AIStart());
     }
 
-    public void DoAi()// 다시 움직임을 재개
+    public void StopMove()
     {
-        StartCoroutine(AIStart());
+        StopAllCoroutines();
     }
 }

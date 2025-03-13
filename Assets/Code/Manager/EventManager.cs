@@ -23,10 +23,14 @@ public class EventManager : MonoBehaviour
     }
 
     public event Action<int> OnCustomEvent;  // 여러 스크립트에서 정수값을 전달할 이벤트
-    public event Action<AnimationTag> OnCustomEvent2;
+
+    //public event Action<AnimationTag> OnCustomEvent2;
 
     public event Action OnCustomEvent3;
     public event Action EnemyAni;
+
+    public event Action PlayerDied;
+    public event Action EnemyDied;
 
     public void TriggerEvent(int index)
     {
@@ -41,6 +45,16 @@ public class EventManager : MonoBehaviour
     {
         EnemyAni?.Invoke();  // EnemyStat으로 이벤트 호출
 
+    }
+
+    public void PlayerDieEvent()
+    {
+        PlayerDied?.Invoke();
+    }
+
+    public void EnemyDieEvent()
+    {
+        EnemyDied?.Invoke();
     }
 
     //EventManager.Instance.TriggerEvent(index);  // 다른 스크립트에서 사용할 경우,
